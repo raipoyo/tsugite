@@ -1,6 +1,62 @@
 # Contributing Guide
 
-## セットアップ
+## 開発環境セットアップ（Nix）
+
+このプロジェクトは **Nix flakes** で開発環境を管理している。
+OS・マシン問わず全員が同一バージョンの bun / git / gh を使える。
+
+### 前提: Nix インストール
+
+```bash
+# まだ入っていない場合（Determinate Systems 推奨）
+curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
+```
+
+### 方法 A: `nix develop`（手動）
+
+```bash
+nix develop   # dev shell に入る（bun, git, gh が使えるようになる）
+bun install   # 依存関係インストール
+bun dev       # 開発サーバー起動
+```
+
+シェルを抜けるときは `exit`。
+
+### 方法 B: `direnv`（自動、推奨）
+
+ディレクトリに入るだけで dev shell が自動で有効になる。
+
+```bash
+# 1. direnv をインストール
+brew install direnv nix-direnv
+
+# 2. シェルフックを追加（zsh の場合）
+echo 'eval "$(direnv hook zsh)"' >> ~/.zshrc && source ~/.zshrc
+
+# 3. プロジェクトで許可
+cd /path/to/tsugite
+direnv allow
+```
+
+以降は `cd tsugite` するだけで dev shell が有効になる。
+
+### flake.lock について
+
+`flake.lock` はコミット管理する。nixpkgs のコミットハッシュがピン留めされており、
+これにより全員が同じバージョンのツールを使える。
+
+ツールバージョンを上げる場合:
+
+```bash
+nix flake update  # flake.lock を更新
+git add flake.lock && git commit -m "chore: update nix flake inputs"
+```
+
+---
+
+## セットアップ（従来の方法）
+
+Nix を使わない場合。bun が入っていれば動く。
 
 ```bash
 bun install

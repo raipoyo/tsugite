@@ -1,0 +1,3 @@
+// shared UI primitives (Button, Input, Modal など)
+// ビジネスロジックを持たない純粋なプレゼンテーション層
+export {}

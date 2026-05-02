@@ -1,0 +1,3 @@
+// 機能モジュール置き場
+// 各機能は features/<feature-name>/{components,hooks,utils,types} の構造を持つ
+export {}

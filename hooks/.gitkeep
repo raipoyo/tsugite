@@ -1,0 +1,3 @@
+// グローバルカスタムフック
+// 機能固有のフックは features/<name>/hooks/ に置く
+export {}

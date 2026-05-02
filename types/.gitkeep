@@ -1,0 +1,3 @@
+// グローバル型定義
+// 例: types/api.ts, types/models.ts
+export {}

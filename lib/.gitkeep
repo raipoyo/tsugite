@@ -1,0 +1,3 @@
+// グローバルユーティリティ・APIクライアント・定数
+// 例: lib/api.ts, lib/utils.ts, lib/constants.ts
+export {}

@@ -20,6 +20,7 @@
 | 開発環境管理         | Nix flakes                       |
 | Linter / Formatter   | ESLint 9 + Prettier 3            |
 | Git フック           | Husky + lint-staged + commitlint |
+| バックエンド         | Hono 4                           |
 | CI/CD                | GitHub Actions                   |
 
 ## セットアップ
@@ -64,13 +65,34 @@ bun dev
 ## ディレクトリ構成
 
 ```
-app/               # Next.js App Router ルート
-app/(routes)/      # アプリのルートグループ
-components/ui/     # 再利用可能な UI プリミティブ
-features/<name>/   # 機能モジュール（components / hooks / utils / types）
-lib/               # グローバルユーティリティ・API クライアント・定数
-hooks/             # グローバルカスタムフック
-types/             # グローバル型定義
+app/                   # Next.js App Router ルート
+app/(routes)/          # アプリのルートグループ
+app/api/[[...route]]/  # Hono エントリーポイント（全 API リクエストをここで受ける）
+components/ui/         # 再利用可能な UI プリミティブ
+features/<name>/       # 機能モジュール（components / hooks / utils / types / api）
+lib/                   # グローバルユーティリティ・API クライアント・定数
+hooks/                 # グローバルカスタムフック
+types/                 # グローバル型定義
+```
+
+## API
+
+バックエンドは [Hono](https://hono.dev/) を Next.js の Route Handler にマウントする構成。`/api/*` 以下のリクエストが全て Hono に流れる。
+
+```ts
+// ルートの追加例（features/<name>/api.ts）
+export const exampleRoute = new Hono().get('/', (c) => c.json({ message: 'hello' }))
+
+// app/api/[[...route]]/route.ts でマウント
+app.route('/example', exampleRoute)
+// → GET /api/example
+```
+
+動作確認用エンドポイント：
+
+```bash
+curl http://localhost:3000/api/health
+# → { "status": "ok" }
 ```
 
 ## 環境変数

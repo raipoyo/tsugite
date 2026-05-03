@@ -10,6 +10,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- `hono` を導入。`app/api/[[...route]]/route.ts` のキャッチオールルートにマウントし、Next.js Route Handler 経由で Vercel にデプロイできる構成にした。動作確認用に `GET /api/health` を追加
+
 - Prettier + eslint-config-prettier を導入。コードフォーマットを自動化し、スタイル議論をゼロにする
 - Husky + lint-staged によるpre-commitフック。コミット時にステージングファイルを自動フォーマット＆lint
 - commitlint によるConventional Commits強制。チーム間のコミットメッセージを統一する

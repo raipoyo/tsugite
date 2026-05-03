@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TSUGITE
 
-## Getting Started
+## — 小さくなる伝統に、新たな継ぎ手を —
 
-First, run the development server:
+---
+
+## 概要
+
+日本各地で受け継がれてきた伝統技術・文化は、後継者不足により急速に失われつつある。**TSUGITE** は、そうした「伝統の担い手（継ぎ手）」と次世代をつなぐWebプラットフォームだ。
+
+## Tech Stack
+
+| カテゴリ             | 技術                             |
+| -------------------- | -------------------------------- |
+| フレームワーク       | Next.js 16 (App Router)          |
+| UI                   | React 19                         |
+| 言語                 | TypeScript 5（strict）           |
+| スタイリング         | Tailwind CSS v4                  |
+| パッケージマネージャ | Bun                              |
+| 開発環境管理         | Nix flakes                       |
+| Linter / Formatter   | ESLint 9 + Prettier 3            |
+| Git フック           | Husky + lint-staged + commitlint |
+| CI/CD                | GitHub Actions                   |
+
+## セットアップ
+
+### 推奨: Nix + direnv（環境が自動で揃う）
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
+# 1. Nix をインストール（未導入の場合）
+curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
+
+# 2. direnv をインストール
+brew install direnv nix-direnv
+
+# 3. シェルフックを追加（zsh の場合）
+echo 'eval "$(direnv hook zsh)"' >> ~/.zshrc && source ~/.zshrc
+
+# 4. プロジェクトで許可
+cd tsugite
+direnv allow   # ← これ以降は cd するだけで dev shell が有効になる
+
+# 5. 依存関係インストール → 開発サーバー起動
+bun install
+bun dev        # → http://localhost:3000
+```
+
+### Nix なし（bun のみ）
+
+```bash
+bun install
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## コマンド
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| コマンド        | 内容             |
+| --------------- | ---------------- |
+| `bun dev`       | 開発サーバー起動 |
+| `bun run build` | 本番ビルド       |
+| `bun start`     | 本番サーバー起動 |
+| `bun run lint`  | ESLint 実行      |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## ディレクトリ構成
 
-## Learn More
+```
+app/               # Next.js App Router ルート
+app/(routes)/      # アプリのルートグループ
+components/ui/     # 再利用可能な UI プリミティブ
+features/<name>/   # 機能モジュール（components / hooks / utils / types）
+lib/               # グローバルユーティリティ・API クライアント・定数
+hooks/             # グローバルカスタムフック
+types/             # グローバル型定義
+```
 
-To learn more about Next.js, take a look at the following resources:
+## 環境変数
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+`.env.local` を使用（`.gitignore` で除外済み）。チームメンバーから直接共有を受けること。キーの一覧は `.env.example` を参照。
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Contributing
 
-## Deploy on Vercel
+詳細は [CONTRIBUTING.md](./CONTRIBUTING.md) を参照。
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **ブランチ**: `feature/<desc>` / `fix/<desc>` / `chore/<desc>` — `main` への直接 push 禁止
+- **コミット**: [Conventional Commits](https://www.conventionalcommits.org/) 形式を commitlint が強制
+- **PR**: 1機能・1修正単位で、Squash merge
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
+
+TBD

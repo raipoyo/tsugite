@@ -24,3 +24,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `.envrc` を追加。direnv 対応で `cd` するだけで dev shell が自動有効化される
 - `.gitignore` に `.direnv/` と `result` を追加
 - `CONTRIBUTING.md` に Nix セットアップ手順（`nix develop` / direnv 両方）を追記
+- `README.md` を整備。プロジェクト概要・tech stack・セットアップ手順・コマンド一覧・ディレクトリ構成を記載

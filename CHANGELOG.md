@@ -10,6 +10,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Google OAuth/OIDC 認証のバックエンド API を追加。ログイン開始、callback、ログアウト、セッション確認、現在ユーザー取得を Hono ルートとして提供し、初回ログイン時にユーザー情報を保存できる認証基盤を用意
+
 - `hono` を導入。`app/api/[[...route]]/route.ts` のキャッチオールルートにマウントし、Next.js Route Handler 経由で Vercel にデプロイできる構成にした。動作確認用に `GET /api/health` を追加
 
 - Prettier + eslint-config-prettier を導入。コードフォーマットを自動化し、スタイル議論をゼロにする

@@ -10,6 +10,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- TSUGITE のデザイントークンを `app/globals.css` に定義。和紙、墨、朱、状態色、focus / disabled の基準を Tailwind CSS v4 のクラスから参照できるようにした
+- `components/ui/` に Button、Input、Textarea、Select、Checkbox、Toggle、Badge、StatusBadge、Card、Dialog、Sheet、Tabs、EmptyState、InlineFeedback、AppShell を追加。後続画面で共有できる UI プリミティブとして整備した
+- ホーム画面を UI カタログに置き換え。ログイン導線、タスクテンプレート一覧、タスク詳細、カメラ判定結果、チャット / 音声レコメンドの表示基準を確認できるようにした
 - Google OAuth/OIDC 認証のバックエンド API を追加。ログイン開始、callback、ログアウト、セッション確認、現在ユーザー取得を Hono ルートとして提供し、初回ログイン時にユーザー情報を保存できる認証基盤を用意
 
 - `hono` を導入。`app/api/[[...route]]/route.ts` のキャッチオールルートにマウントし、Next.js Route Handler 経由で Vercel にデプロイできる構成にした。動作確認用に `GET /api/health` を追加

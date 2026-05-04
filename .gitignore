@@ -49,3 +49,5 @@ next-env.d.ts
 # nix / direnv
 .direnv/
 result
+
+.playwright-mcp/

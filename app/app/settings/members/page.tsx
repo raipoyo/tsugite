@@ -6,7 +6,7 @@ export default function MembersSettingsPage() {
       <PageHeader
         eyebrow="Settings"
         title="メンバー招待"
-        description="低優先度。招待機能はハッカソン後に実装する。"
+        description="店舗に参加するメンバーを招待・管理する。"
       />
       <div className="grid gap-5 md:grid-cols-2">
         <MvpCard title="店主" description="Archive登録と正解シーンの管理者。" badge="owner" />

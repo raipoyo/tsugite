@@ -2,7 +2,7 @@ import { LinkButton, MvpCard, PageHeader, SectionTitle } from '@/features/hackat
 import { getAppData } from '@/features/hackathon/real-data'
 
 export default async function GuidePage() {
-  const { isReal, scenes } = await getAppData()
+  const { scenes } = await getAppData()
   const primaryScene = scenes[0]
 
   return (
@@ -10,7 +10,7 @@ export default async function GuidePage() {
       <PageHeader
         eyebrow="Guide"
         title="シーン一覧"
-        description="店主が残した正解状態を、後継者が現場で再現できているか判定する。MVPでは客室のお茶出し準備に集中。"
+        description="店主が残した正解状態を、後継者が現場で再現できているか判定する。"
         actions={
           <>
             <LinkButton href={`/app/guide/scenes/${primaryScene?.id ?? 'tea-service'}/live`}>
@@ -23,9 +23,7 @@ export default async function GuidePage() {
         }
       />
       <section>
-        <SectionTitle note={isReal ? 'Supabase reference_scenes' : 'デモデータ'}>
-          登録済みシーン
-        </SectionTitle>
+        <SectionTitle>登録済みシーン</SectionTitle>
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           {scenes.map((scene) => (
             <MvpCard

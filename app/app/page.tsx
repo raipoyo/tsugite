@@ -7,23 +7,23 @@ import {
 } from '@/features/hackathon/mvp-ui'
 import { getAppData } from '@/features/hackathon/real-data'
 
-export default async function MvpHomePage() {
-  const { interviews, isReal, metrics, scenes } = await getAppData()
+export default async function AppHomePage() {
+  const { interviews, scenes, metrics } = await getAppData()
   const primaryScene = scenes[0]
 
   return (
     <main className="space-y-8">
       <PageHeader
-        eyebrow="MVP dashboard"
-        title="3機能だけに絞ったハッカソン本体"
-        description="Guideで現場判定、Archiveで暗黙知抽出、Agentで先代AIに相談。設定や認証は後回しにして、審査員が触る核心だけを前面に出す。"
+        eyebrow="TSUGITE"
+        title="暗黙知の継承を、3つの機能で"
+        description="Archiveで先代の判断を残し、Guideで現場の所作を判定し、Agentで迷った瞬間に相談する。"
         actions={
           <>
             <LinkButton href={`/app/guide/scenes/${primaryScene?.id ?? 'tea-service'}/live`}>
               ライブ判定を開く
             </LinkButton>
             <LinkButton href="/app/agent" variant="secondary">
-              AI分身に相談
+              AIに相談する
             </LinkButton>
           </>
         }
@@ -36,27 +36,25 @@ export default async function MvpHomePage() {
       </section>
 
       <section>
-        <SectionTitle note={isReal ? '実データ接続中' : '未ログイン時はデモデータ'}>
-          機能エントリー
-        </SectionTitle>
-        <div className="grid gap-5 lg:grid-cols-3">
+        <SectionTitle>使い方</SectionTitle>
+        <div className="grid gap-5 md:grid-cols-3">
           <MvpCard
-            title="Guide"
-            description="カメラ風UIで客室準備をライブ判定。所作のズレをその場で返すMVP核心。"
-            href="/app/guide"
-            badge="最優先"
-          />
-          <MvpCard
-            title="Archive"
-            description="動画インタビューから状況・判断・理由を抽出し、RAGの材料にする。"
+            badge="1"
+            title="Archiveで先代の知恵を残す"
+            description="インタビュー動画から状況・判断・理由を抽出し、引き継ぎの材料にする。"
             href="/app/archive"
-            badge="重要"
           />
           <MvpCard
-            title="Agent"
-            description="抽出済み暗黙知を出典に、先代女将の口調で回答するチャット。"
+            badge="2"
+            title="Guideで現場を判定する"
+            description="登録した正解状態と現場をリアルタイムで比較。ズレた所作だけを短く返す。"
+            href={`/app/guide/scenes/${primaryScene?.id ?? 'tea-service'}/live`}
+          />
+          <MvpCard
+            badge="3"
+            title="Agentに相談する"
+            description="抽出した暗黙知を出典に、先代の判断を再現するAIがその場で答える。"
             href="/app/agent"
-            badge="最優先"
           />
         </div>
       </section>

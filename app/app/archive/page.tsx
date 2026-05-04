@@ -10,7 +10,7 @@ export default async function ArchivePage() {
       <PageHeader
         eyebrow="Archive"
         title="インタビュー動画一覧"
-        description="店主の語りから、継承に必要な判断基準を抽出する。MVPでは動画詳細でタグ抽出済みの状態を強く見せる。"
+        description="店主の語りから、継承に必要な判断基準を抽出する。"
         actions={
           <>
             <LinkButton href={`/app/archive/${primaryInterview?.id ?? 'interview-okami'}`}>

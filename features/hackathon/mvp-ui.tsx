@@ -18,7 +18,9 @@ export function PageHeader({ actions, description, eyebrow, title }: PageHeaderP
       <div className="absolute inset-y-0 right-0 w-1/2 bg-[radial-gradient(circle_at_center,rgba(185,80,59,0.42),transparent_62%)]" />
       <div className="relative max-w-3xl">
         <p className="text-xs font-semibold uppercase tracking-[0.32em] text-shu-3">{eyebrow}</p>
-        <h1 className="mt-4 text-3xl font-semibold tracking-tight md:text-5xl">{title}</h1>
+        <h1 className="mt-4 font-serif text-3xl font-semibold tracking-tight md:text-5xl">
+          {title}
+        </h1>
         <p className="mt-4 max-w-2xl text-base leading-8 text-white/72 md:text-lg">{description}</p>
         {actions ? <div className="mt-7 flex flex-wrap gap-3">{actions}</div> : null}
       </div>
@@ -106,7 +108,7 @@ export function StatCard({ label, note, value }: StatCardProps) {
 export function SectionTitle({ children, note }: { children: ReactNode; note?: string }) {
   return (
     <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
-      <h2 className="text-2xl font-semibold tracking-tight text-ink">{children}</h2>
+      <h2 className="font-serif text-2xl font-semibold tracking-tight text-ink">{children}</h2>
       {note ? <p className="text-sm text-ink-4">{note}</p> : null}
     </div>
   )

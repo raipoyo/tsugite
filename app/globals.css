@@ -57,6 +57,7 @@
   --color-unknown-bg: var(--unknown-bg);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-noto-serif-jp);
   --radius-control: var(--control-radius);
   --radius-panel: var(--panel-radius);
   --spacing-field: var(--space-field);

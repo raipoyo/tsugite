@@ -8,6 +8,58 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- **デザイン言語を全ページで washi/ink/shu トークンに統一**（マーケティング側が zinc ベースだった断絶を解消）
+  - `features/marketing/site-header.tsx`: `zinc` クラスを washi/ink トークンに置換、`dark:` クラスを削除
+  - `features/marketing/site-footer.tsx`: 同上
+  - `app/(marketing)/page.tsx`: Hero グラジェントを `washi/shu-3` ベースの和紙テクスチャ風に再設計、CTA ボタンを `bg-shu` に変更、機能カードのリンクを `text-shu` に統一
+  - `app/(marketing)/opportunities/page.tsx`: zinc → washi/ink/shu 置換、prefecture バッジを `bg-shu-3 text-shu` に変更
+  - `app/(marketing)/contact/page.tsx`, `privacy/page.tsx`, `terms/page.tsx`: zinc → ink/ink-3 置換、`dark:` クラス削除
+- **Noto Serif JP を見出し用 serif フォントとして追加**
+  - `app/layout.tsx`: `Noto_Serif_JP`（weight 400/600）を `--font-noto-serif-jp` 変数で注入
+  - `app/globals.css`: `--font-serif` トークンを `@theme inline` に追加
+  - LP h1、`PageHeader` タイトル、`SectionTitle`、各ページ h1 に `font-serif` を適用
+- **アプリナビにアクティブ状態を追加**
+  - `app/app/layout.tsx`: `usePathname()` で現在パスを検出し、一致する nav アイテムに `bg-white text-ink` を常時適用（`'use client'` に変換）
+- **アプリホームの重複セクションを削除**
+  - `app/app/page.tsx`: Guide/Archive/Agent を重複表示していた2つ目の機能カードグループを削除
+
+### Removed
+
+- `/demo/ryokan` ページを削除（内容を `/app` ホームに統合）
+- `/demo/pitch` ページを削除
+- `app/(public)/` ルートグループを削除
+- `/app` ヘッダーの「デモ導線」ボタンを削除
+
+### Changed
+
+- ヘッダーブランド名 `TSUGITE MVP` → `TSUGITE`
+- LP の CTA を3ボタン（旅館デモ/ピッチ/MVP本体）から1ボタン「はじめる」→ `/app` に統一
+- `/app` ホームに「使い方」3ステップ（Archive→Guide→Agent）を統合
+- 全 `/app/*` ページからハッカソン・審査員・MVP・低優先度などの内部向け文言を削除
+- `mvpMetrics` の `note` を内部向け表記から製品向け表記に変更（"旅館デモ用"→"所作判定", "モック周期"→"応答速度"）
+
+### Changed (追記)
+
+- `features/hackathon/live-guide-demo.tsx` のモック実装を `GuideInterface`（本物）に差し替え
+  - 算術スコア・固定チェックリスト・タイマーループを削除
+  - `/api/guide/analyze`（Gemini Vision + GPT-4o）と `/api/guide/tts`（OpenAI TTS）に接続
+  - `AppScene` → `SceneState` 変換を内部で実施（`name` → `sceneName`）
+  - `shopId: null` 時はログイン誘導メッセージを表示
+- `app/app/guide/scenes/[id]/live/page.tsx`: description をリアルカメラ判定の実態に合わせて更新
+
+### Added (追記)
+
+- Supabase コア機能スキーマ適用（migration: `20260505090000_core_feature_schema`）
+  - テーブル作成: shops, interviews, tacit_tags, tag_embeddings, reference_scenes, observation_logs
+  - 全テーブルに RLS 適用済み（owner のみ自分のデータにアクセス可能）
+  - vector 拡張インストール（tag_embeddings の 1536 次元ベクトル用）
+- Supabase Storage bucket 作成（migration: `20260505100000_storage_buckets`）
+  - `interview-videos` bucket（private）
+  - アップロード・読み取り・削除の RLS ポリシー設定済み
+- デモデータ投入: shop（"デモ店舗"）と reference_scene（"客室のお茶出し準備"）を DB に直接 seed
+
 ### Added
 
 - ハッカソン審査向けのMVPページマップを追加。既存の店／継ぎ手ダッシュボードとは別に、デモで迷わない `/demo/*` と `/app/*` の体験導線を作成

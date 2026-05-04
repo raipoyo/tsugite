@@ -3,71 +3,91 @@ import Link from 'next/link'
 import Card from '@/components/ui/card'
 import Container from '@/components/ui/container'
 
-const btnPrimary =
-  'inline-flex h-11 min-w-[9rem] w-full items-center justify-center rounded-lg bg-zinc-900 px-4 text-sm font-medium text-white transition hover:bg-zinc-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200 sm:w-auto'
-
-const btnSecondary =
-  'inline-flex h-11 min-w-[9rem] w-full items-center justify-center rounded-lg border border-zinc-300 bg-white px-4 text-sm font-medium text-zinc-900 transition hover:bg-zinc-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50 dark:hover:bg-zinc-800 sm:w-auto'
-
 export default function LandingPage() {
   return (
     <main className="flex flex-1 flex-col">
-      <section className="border-b border-zinc-200 bg-gradient-to-b from-white to-zinc-50 py-20 dark:border-zinc-800 dark:from-zinc-950 dark:to-black">
-        <Container>
-          <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
+      {/* Hero */}
+      <section className="relative overflow-hidden border-b border-washi-2 py-20">
+        {/* 和紙テクスチャ風グラジェント — アプリの PageHeader と同じ shu radial 手法 */}
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(240,216,208,0.55),transparent_55%),linear-gradient(to_bottom,#eef0ec,#dde2dc)]" />
+        {/* 細かいノイズ感のオーバーレイ */}
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E")`,
+            backgroundRepeat: 'repeat',
+          }}
+        />
+        <Container className="relative">
+          <p className="text-xs font-semibold uppercase tracking-[0.32em] text-ink-4">
             — 小さくなる伝統に、新たな継ぎ手を —
           </p>
-          <h1 className="mt-6 max-w-3xl text-4xl font-semibold tracking-tight text-zinc-900 md:text-5xl dark:text-zinc-50">
+          <h1 className="mt-6 max-w-3xl font-serif text-4xl font-semibold tracking-tight text-ink md:text-5xl">
             見て覚えろ、をAIで残して継ぐ
           </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-zinc-600 dark:text-zinc-400">
-            Archiveで先代の判断を残し、Guideで現場の所作を判定し、Agentで迷った瞬間に相談する。ハッカソンMVPは旅館シナリオに固定して、継承の核心だけを見せます。
+          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-3">
+            Archiveで先代の判断を残し、Guideで現場の所作を判定し、Agentで迷った瞬間に相談する。
+            職人・旅館・老舗飲食——言語化されてこなかった技と判断を、次の世代へ渡す。
           </p>
-
-          <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
-            <Link href="/demo/ryokan" className={btnPrimary}>
-              旅館デモを見る
-            </Link>
-            <Link href="/demo/pitch" className={btnSecondary}>
-              ピッチ画面
-            </Link>
-            <Link href="/app" className={btnSecondary}>
-              MVP本体
+          <div className="mt-10">
+            <Link
+              href="/app"
+              className="inline-flex h-11 min-w-[9rem] w-full items-center justify-center rounded-lg bg-shu px-5 text-sm font-semibold text-white transition hover:bg-shu-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-shu sm:w-auto"
+            >
+              はじめる
             </Link>
           </div>
         </Container>
       </section>
 
+      {/* 機能紹介 */}
       <section className="py-16 md:py-24">
         <Container>
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-6 md:grid-cols-3">
             <Card className="p-6">
-              <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">Archive</h2>
-              <p className="mt-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-                先代女将へのインタビュー動画から、状況・判断・理由の3層タグを抽出します。
+              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-ink-4">
+                Archive
+              </p>
+              <h2 className="mt-3 text-lg font-semibold text-ink">先代の判断を残す</h2>
+              <p className="mt-3 text-sm leading-relaxed text-ink-3">
+                先代へのインタビュー動画から、状況・判断・理由の3層タグを抽出します。
               </p>
               <div className="mt-6">
                 <Link
-                  className="text-sm font-medium text-zinc-900 underline-offset-4 hover:underline dark:text-zinc-50"
-                  href="/app/archive/interview-okami"
+                  className="text-sm font-semibold text-shu underline-offset-4 hover:text-shu-2 hover:underline"
+                  href="/app/archive"
                 >
-                  抽出結果を見る →
+                  Archiveを開く →
                 </Link>
               </div>
             </Card>
             <Card className="p-6">
-              <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-                Guide / Agent
-              </h2>
-              <p className="mt-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-                客室準備をライブ判定し、迷った時は先代女将AIに相談。デモで一番見せる部分です。
+              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-ink-4">Guide</p>
+              <h2 className="mt-3 text-lg font-semibold text-ink">現場の所作を判定する</h2>
+              <p className="mt-3 text-sm leading-relaxed text-ink-3">
+                正解の所作と現場をリアルタイムで比較し、ズレた点だけを短く返します。
               </p>
               <div className="mt-6">
                 <Link
-                  className="text-sm font-medium text-zinc-900 underline-offset-4 hover:underline dark:text-zinc-50"
-                  href="/app/guide/scenes/tea-service/live"
+                  className="text-sm font-semibold text-shu underline-offset-4 hover:text-shu-2 hover:underline"
+                  href="/app/guide"
                 >
-                  ライブ判定を見る →
+                  Guideを開く →
+                </Link>
+              </div>
+            </Card>
+            <Card className="p-6">
+              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-ink-4">Agent</p>
+              <h2 className="mt-3 text-lg font-semibold text-ink">迷った瞬間に相談する</h2>
+              <p className="mt-3 text-sm leading-relaxed text-ink-3">
+                Archiveから抽出した暗黙知を出典に、先代の判断を再現するAIに相談できます。
+              </p>
+              <div className="mt-6">
+                <Link
+                  className="text-sm font-semibold text-shu underline-offset-4 hover:text-shu-2 hover:underline"
+                  href="/app/agent"
+                >
+                  Agentを開く →
                 </Link>
               </div>
             </Card>
@@ -75,13 +95,14 @@ export default function LandingPage() {
         </Container>
       </section>
 
-      <section className="border-t border-zinc-200 bg-white py-12 dark:border-zinc-800 dark:bg-zinc-950">
+      {/* ベータ告知 */}
+      <section className="border-t border-washi-2 py-12">
         <Container className="text-center">
-          <p className="text-sm text-zinc-600 dark:text-zinc-400">
+          <p className="text-sm text-ink-3">
             TSUGITE は現在ベータ開発中です。掲載内容・利用規約は正式リリース前に更新されます。
           </p>
           <Link
-            className="mt-4 inline-block text-sm font-medium text-zinc-900 dark:text-zinc-50"
+            className="mt-4 inline-block text-sm font-medium text-ink hover:text-shu"
             href="/terms"
           >
             利用規約

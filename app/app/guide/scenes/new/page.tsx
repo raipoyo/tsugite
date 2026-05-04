@@ -11,7 +11,7 @@ export default async function NewScenePage() {
       <PageHeader
         eyebrow="Guide setup"
         title="正解の所作を登録"
-        description="本番では店主がスマホで正解状態を撮影し、チェック項目をAIが初期生成する。ハッカソンでは事前登録済みの旅館シーンを使う。"
+        description="店主がスマホで正解状態を撮影し、チェック項目をAIが初期生成する。"
         actions={
           <LinkButton href={`/app/guide/scenes/${primaryScene?.id ?? 'tea-service'}/live`}>
             登録済みシーンを見る

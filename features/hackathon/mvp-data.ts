@@ -104,7 +104,7 @@ export const agentMessages = [
 ] as const
 
 export const mvpMetrics = [
-  { label: '登録シーン', value: '3', note: '旅館デモ用' },
+  { label: '登録シーン', value: '3', note: '所作判定' },
   { label: '暗黙知タグ', value: '14', note: '抽出済み' },
-  { label: 'ライブ判定', value: '2秒', note: 'モック周期' },
+  { label: 'ライブ判定', value: '2秒', note: '応答速度' },
 ] as const

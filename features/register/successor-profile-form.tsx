@@ -79,7 +79,8 @@ export default function SuccessorProfileForm({
       </label>
       <Button type="submit">保存してダッシュボードへ</Button>
       <p className="text-xs text-zinc-500 dark:text-zinc-400">
-        プロフィールは Clerk のユーザー publicMetadata に保存されます（開発用）。
+        プロフィールは Supabase の <code className="text-xs">profiles</code>{' '}
+        テーブルに保存されます（開発用）。
       </p>
     </form>
   )

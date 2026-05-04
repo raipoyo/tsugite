@@ -1,30 +1,5 @@
-import Link from 'next/link'
-
-import { SignIn } from '@clerk/nextjs'
-
-import Container from '@/components/ui/container'
+import { redirect } from 'next/navigation'
 
 export default function SignInPage() {
-  return (
-    <main className="flex flex-1 flex-col bg-zinc-50 py-12 dark:bg-black">
-      <Container className="flex flex-col items-center gap-8">
-        <Link
-          href="/"
-          className="text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
-        >
-          ← TSUGITE トップへ
-        </Link>
-        <SignIn
-          path="/sign-in"
-          routing="path"
-          signUpUrl="/sign-up"
-          appearance={{
-            elements: {
-              rootBox: 'w-full max-w-md',
-            },
-          }}
-        />
-      </Container>
-    </main>
-  )
+  redirect('/login')
 }

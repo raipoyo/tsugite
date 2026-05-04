@@ -10,12 +10,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
-- `@clerk/nextjs` と `middleware.ts` による認証。`/shop/*`、`/successor/*`、`/register/*`、`/onboarding/*` をログイン必須にし、`publicMetadata.role`（`shop` / `successor`）でコンソールを分岐
+- TSUGITE のデザイントークンを `app/globals.css` に定義。和紙、墨、朱、状態色、focus / disabled の基準を Tailwind CSS v4 のクラスから参照できるようにした
+- `components/ui/` に Button、Input、Textarea、Select、Checkbox、Toggle、Badge、StatusBadge、Card、Dialog、Sheet、Tabs、EmptyState、InlineFeedback、AppShell を追加。後続画面で共有できる UI プリミティブとして整備した
+- デザインシステム UI カタログを `/design-system` に配置（旧ルート `app/page.tsx` 相当）
+- Supabase（Postgres + Auth）を導入。`@supabase/supabase-js` と `@supabase/ssr`、`lib/supabase/` のブラウザ／サーバー／プロキシ用クライアント、ルートの `proxy.ts` でセッション更新する。匿名でも `/` は公開のままにする（未ログイン全局リダイレクトはしない）
+- Google のみの OAuth 用に `/login` と `/auth/callback`（PKCE のコード交換）を追加
+- `supabase/migrations/20260504120000_profiles.sql` で `public.profiles`（RLS・認証ユーザー作成時のトリガー・`updated_at` トリガー）を定義
+- `supabase/migrations/20260504200000_profile_role_and_json.sql` で `profiles.role`（`shop` / `successor`）と `shop_profile` / `successor_profile`（jsonb）を追加
+- アプリ側のプロフィール型を `types/profile.ts` に追加
 - ランディングとマーケ用 `app/(marketing)/`（共通ヘッダ／フッタ）、募集一覧・詳細（`lib/mock-opportunities.ts`）、法務ドラフト（`/terms` `/privacy` `/contact`）
-- 店／継ぎ手フロー：`/onboarding/role`、プロフィールフォーム（`/register/shop` `/register/successor`、Clerk `publicMetadata` に簡易保存）、各ダッシュボード・募集管理 UI（モック中心）
-- UI プリミティブ `components/ui/`（`button` `container` `card`）と `app/not-found.tsx` / `app/error.tsx`
-- ルートレイアウトに `ClerkProvider`、`lang="ja"`、サイト用 `metadata`
-- `.env.example` に Clerk 関連キーとサインイン後 URL の雛形を追加
+- 店／継ぎ手フロー：`/onboarding/role`、プロフィールフォーム（`/register/shop` `/register/successor`、上記 `profiles` 列に保存）、各ダッシュボード・募集管理 UI（モック中心）
+- `proxy.ts`（Next.js 16）で `/shop/*`、`/successor/*`、`/register/*`、`/onboarding/*` をログイン必須にし、未ログイン時は `/login?returnTo=…` へリダイレクト
+- `components/ui/container` と `app/not-found.tsx` / `app/error.tsx`
 - `hono` を導入。`app/api/[[...route]]/route.ts` のキャッチオールルートにマウントし、Next.js Route Handler 経由で Vercel にデプロイできる構成にした。動作確認用に `GET /api/health` を追加
 - Prettier + eslint-config-prettier を導入。コードフォーマットを自動化し、スタイル議論をゼロにする
 - Husky + lint-staged によるpre-commitフック。コミット時にステージングファイルを自動フォーマット＆lint
@@ -33,7 +39,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `CONTRIBUTING.md` に Nix セットアップ手順（`nix develop` / direnv 両方）を追記
 - `README.md` を整備。プロジェクト概要・tech stack・セットアップ手順・コマンド一覧・ディレクトリ構成を記載
 
+### Removed
+
+- Hono の `/api/auth/*`、独自 Google トークン交換、`jose` のセッション署名クッキー、インメモリユーザーストアを削除（認証は Supabase に一本化）
+
 ### Changed
 
-- 旧 `app/page.tsx`（create-next-app のまま）を撤去し、`app/(marketing)/page.tsx` に差し替え
-- `README.md` に Clerk、主要ルート表、環境変数セットアップを追記
+- ルート `/` はマーケ用ランディング（`app/(marketing)/page.tsx`）。`/sign-in`・`/sign-up` は `/login` へ誘導
+- オンボーディング・店／継ぎ手プロフィールの永続化は Clerk `publicMetadata` ではなく `public.profiles` の `role` / `shop_profile` / `successor_profile` に統一
+- `.env.example` を Supabase（`NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`）と `APP_ORIGIN` に合わせ、`GOOGLE_*` と `AUTH_SESSION_SECRET` の記載を廃止
+- ESLint の `@typescript-eslint/no-unused-vars` で `_` 接頭辞の未使用変数・引数を無視するようにした（Supabase サーバークライアントの `setAll` などで利用）

@@ -1,8 +1,7 @@
 import { redirect } from 'next/navigation'
-import { currentUser } from '@clerk/nextjs/server'
 
 import DashboardSideNav from '@/features/dashboard/dashboard-side-nav'
-
+import { getCurrentProfile } from '@/lib/get-profile'
 import { parseUserRole } from '@/lib/roles'
 
 const SUCCESSOR_NAV = [
@@ -14,10 +13,10 @@ const SUCCESSOR_NAV = [
 export default async function SuccessorSectionLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const user = await currentUser()
-  if (!user) redirect('/sign-in')
+  const profile = await getCurrentProfile()
+  if (!profile) redirect('/login')
 
-  const role = parseUserRole(user.publicMetadata as Record<string, unknown>)
+  const role = parseUserRole(profile)
   if (!role) redirect('/onboarding/role')
   if (role !== 'successor') redirect('/shop')
 

@@ -19,7 +19,7 @@ export default function OpportunitiesPage() {
         <div className="mt-10 grid gap-5">
           {MOCK_OPPORTUNITIES.map((o) => (
             <Link key={o.id} href={`/opportunities/${o.id}`}>
-              <Card className="transition hover:border-zinc-300 dark:hover:border-zinc-600">
+              <Card className="p-6 transition hover:border-zinc-300 dark:hover:border-zinc-600">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <div className="text-xs uppercase tracking-wide text-zinc-500">

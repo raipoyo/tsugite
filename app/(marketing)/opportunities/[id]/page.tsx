@@ -32,7 +32,7 @@ export default async function OpportunityDetailPage({ params }: PageProps) {
           <span>{opp.shopName}</span>
         </div>
 
-        <Card className="mt-10">
+        <Card className="mt-10 p-6">
           <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-500">概要</h2>
           <p className="mt-4 whitespace-pre-wrap text-sm leading-relaxed text-zinc-700 dark:text-zinc-300">
             {opp.description}
@@ -47,7 +47,7 @@ export default async function OpportunityDetailPage({ params }: PageProps) {
 
         <div className="mt-10 flex flex-col gap-4 sm:flex-row">
           <Link
-            href="/sign-up"
+            href="/login"
             className="inline-flex h-11 flex-1 items-center justify-center rounded-lg bg-zinc-900 px-4 text-center text-sm font-medium text-white hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
           >
             この募集に応募する（開発中）

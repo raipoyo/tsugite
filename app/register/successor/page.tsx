@@ -1,22 +1,19 @@
-import { currentUser } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 
 import Container from '@/components/ui/container'
 import SuccessorProfileForm from '@/features/register/successor-profile-form'
-
+import { getCurrentProfile } from '@/lib/get-profile'
 import { parseUserRole } from '@/lib/roles'
-import type { ClerkUserPublicMetadataShape } from '@/types/metadata'
 
 export default async function RegisterSuccessorPage() {
-  const user = await currentUser()
-  if (!user) redirect('/sign-in')
+  const profile = await getCurrentProfile()
+  if (!profile) redirect('/login')
 
-  const role = parseUserRole(user.publicMetadata as Record<string, unknown>)
+  const role = parseUserRole(profile)
   if (!role) redirect('/onboarding/role')
   if (role !== 'successor') redirect('/shop')
 
-  const meta = user.publicMetadata as ClerkUserPublicMetadataShape | undefined | null
-  const sp = meta?.successorProfile
+  const sp = profile.successor_profile
 
   return (
     <main className="flex flex-1 flex-col bg-zinc-50 py-12 dark:bg-black">

@@ -1,8 +1,8 @@
 'use server'
 
-import { auth, clerkClient } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 
+import { createClient } from '@/lib/supabase/server'
 import { parseUserRole } from '@/lib/roles'
 
 const MAX_LENGTH = 2000
@@ -16,12 +16,23 @@ export async function saveSuccessorProfile(
   formData: FormData,
 ): Promise<SuccessorProfileState> {
   void prev
-  const { userId } = await auth()
-  if (!userId) redirect('/sign-in')
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) redirect('/login')
 
-  const client = await clerkClient()
-  const user = await client.users.getUser(userId)
-  if (parseUserRole(user.publicMetadata as Record<string, unknown>) !== 'successor') {
+  const { data: profile, error: readError } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .maybeSingle()
+
+  if (readError || !profile) {
+    return { error: 'required' }
+  }
+
+  if (parseUserRole(profile) !== 'successor') {
     return { error: 'role_mismatch' }
   }
 
@@ -36,20 +47,20 @@ export async function saveSuccessorProfile(
     return { error: 'too_long' }
   }
 
-  const raw = user.publicMetadata
-  const meta =
-    raw && typeof raw === 'object' && !Array.isArray(raw) ? (raw as Record<string, unknown>) : {}
+  const successor_profile = {
+    displayName,
+    interests,
+    bio,
+  }
 
-  await client.users.updateUser(userId, {
-    publicMetadata: {
-      ...meta,
-      successorProfile: {
-        displayName,
-        interests,
-        bio,
-      },
-    },
-  })
+  const { error: updateError } = await supabase
+    .from('profiles')
+    .update({ successor_profile })
+    .eq('id', user.id)
+
+  if (updateError) {
+    return { error: 'required' }
+  }
 
   redirect('/successor')
 }

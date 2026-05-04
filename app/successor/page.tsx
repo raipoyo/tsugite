@@ -19,7 +19,7 @@ export default function SuccessorDashboardPage() {
         <div className="mt-10 grid gap-5 md:grid-cols-2">
           {picks.map((o) => (
             <Link key={o.id} href={`/opportunities/${o.id}`}>
-              <Card className="h-full transition hover:border-zinc-300 dark:hover:border-zinc-600">
+              <Card className="h-full p-6 transition hover:border-zinc-300 dark:hover:border-zinc-600">
                 <div className="text-xs uppercase tracking-wide text-zinc-500">{o.craftType}</div>
                 <h2 className="mt-2 text-lg font-semibold text-zinc-900 dark:text-zinc-50">
                   {o.title}

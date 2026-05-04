@@ -1,8 +1,7 @@
-import { currentUser } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 
 import DashboardSideNav from '@/features/dashboard/dashboard-side-nav'
-
+import { getCurrentProfile } from '@/lib/get-profile'
 import { parseUserRole } from '@/lib/roles'
 
 const SHOP_NAV = [
@@ -17,10 +16,10 @@ export default async function ShopSectionLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const user = await currentUser()
-  if (!user) redirect('/sign-in')
+  const profile = await getCurrentProfile()
+  if (!profile) redirect('/login')
 
-  const role = parseUserRole(user.publicMetadata as Record<string, unknown>)
+  const role = parseUserRole(profile)
   if (!role) redirect('/onboarding/role')
   if (role !== 'shop') redirect('/successor')
 

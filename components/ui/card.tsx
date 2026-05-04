@@ -1,15 +1,15 @@
-import type { PropsWithChildren } from 'react'
+import type { ReactNode } from 'react'
+import { cn } from '@/lib/cn'
 
-type CardProps = PropsWithChildren<{
+type CardProps = {
+  children: ReactNode
   className?: string
-}>
+}
 
-export default function Card({ children, className = '' }: CardProps) {
+export default function Card({ children, className }: CardProps) {
   return (
-    <div
-      className={`rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-950 ${className}`}
-    >
+    <section className={cn('rounded-lg border border-washi-3 bg-white shadow-sm', className)}>
       {children}
-    </div>
+    </section>
   )
 }

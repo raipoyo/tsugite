@@ -1,28 +1,20 @@
 'use server'
 
-import { auth, clerkClient } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 
 import type { UserRole } from '@/lib/roles'
+import { createClient } from '@/lib/supabase/server'
 
 export async function setUserRole(role: UserRole): Promise<void> {
-  const { userId } = await auth()
-  if (!userId) redirect('/sign-in')
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) redirect('/login')
 
-  const client = await clerkClient()
-  const user = await client.users.getUser(userId)
-  const raw = user.publicMetadata
-  const meta =
-    raw && typeof raw === 'object' && !Array.isArray(raw) ? (raw as Record<string, unknown>) : {}
+  const { error } = await supabase.from('profiles').update({ role }).eq('id', user.id)
 
-  try {
-    await client.users.updateUser(userId, {
-      publicMetadata: {
-        ...meta,
-        role,
-      },
-    })
-  } catch {
+  if (error) {
     redirect('/onboarding/role?error=failed')
   }
 

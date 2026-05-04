@@ -25,13 +25,13 @@ export default function LandingPage() {
           </p>
 
           <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
-            <Link href="/sign-up" className={btnPrimary}>
+            <Link href="/login" className={btnPrimary}>
               はじめる
             </Link>
             <Link href="/opportunities" className={btnSecondary}>
               募集を見る
             </Link>
-            <Link href="/sign-in" className={btnSecondary}>
+            <Link href="/login" className={btnSecondary}>
               ログイン
             </Link>
           </div>
@@ -41,24 +41,24 @@ export default function LandingPage() {
       <section className="py-16 md:py-24">
         <Container>
           <div className="grid gap-6 md:grid-cols-2">
-            <Card>
+            <Card className="p-6">
               <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
                 店として掲載する
               </h2>
               <p className="mt-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-                伝統産業や教育現場での「学び」を募集情報として載せられます。まず Clerk
-                でサインアップし、自分の運用形態（店側）を選びます。
+                伝統産業や教育現場での「学び」を募集情報として載せられます。Google
+                でログインし、オンボーディングで店側の運用形態を選びます。
               </p>
               <div className="mt-6">
                 <Link
                   className="text-sm font-medium text-zinc-900 underline-offset-4 hover:underline dark:text-zinc-50"
-                  href="/sign-up"
+                  href="/login"
                 >
                   店として登録の流れ →
                 </Link>
               </div>
             </Card>
-            <Card>
+            <Card className="p-6">
               <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
                 継ぎ手として参加する
               </h2>
@@ -69,7 +69,7 @@ export default function LandingPage() {
               <div className="mt-6">
                 <Link
                   className="text-sm font-medium text-zinc-900 underline-offset-4 hover:underline dark:text-zinc-50"
-                  href="/sign-up"
+                  href="/login"
                 >
                   継ぎ手として登録する →
                 </Link>

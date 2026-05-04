@@ -1,8 +1,8 @@
 'use server'
 
-import { auth, clerkClient } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 
+import { createClient } from '@/lib/supabase/server'
 import { parseUserRole } from '@/lib/roles'
 
 const MAX_LENGTH = 2000
@@ -16,12 +16,23 @@ export async function saveShopProfile(
   formData: FormData,
 ): Promise<ShopProfileState> {
   void prev
-  const { userId } = await auth()
-  if (!userId) redirect('/sign-in')
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) redirect('/login')
 
-  const client = await clerkClient()
-  const user = await client.users.getUser(userId)
-  if (parseUserRole(user.publicMetadata as Record<string, unknown>) !== 'shop') {
+  const { data: profile, error: readError } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .maybeSingle()
+
+  if (readError || !profile) {
+    return { error: 'required' }
+  }
+
+  if (parseUserRole(profile) !== 'shop') {
     return { error: 'role_mismatch' }
   }
 
@@ -36,20 +47,20 @@ export async function saveShopProfile(
     return { error: 'too_long' }
   }
 
-  const raw = user.publicMetadata
-  const meta =
-    raw && typeof raw === 'object' && !Array.isArray(raw) ? (raw as Record<string, unknown>) : {}
+  const shop_profile = {
+    displayName,
+    region,
+    description,
+  }
 
-  await client.users.updateUser(userId, {
-    publicMetadata: {
-      ...meta,
-      shopProfile: {
-        displayName,
-        region,
-        description,
-      },
-    },
-  })
+  const { error: updateError } = await supabase
+    .from('profiles')
+    .update({ shop_profile })
+    .eq('id', user.id)
+
+  if (updateError) {
+    return { error: 'required' }
+  }
 
   redirect('/shop')
 }

@@ -10,18 +10,18 @@
 
 ## Tech Stack
 
-| カテゴリ             | 技術                             |
-| -------------------- | -------------------------------- |
-| フレームワーク       | Next.js 16 (App Router)          |
-| UI                   | React 19                         |
-| 言語                 | TypeScript 5（strict）           |
-| スタイリング         | Tailwind CSS v4                  |
-| パッケージマネージャ | Bun                              |
-| 開発環境管理         | Nix flakes                       |
-| Linter / Formatter   | ESLint 9 + Prettier 3            |
-| Git フック           | Husky + lint-staged + commitlint |
-| バックエンド         | Hono 4                           |
-| CI/CD                | GitHub Actions                   |
+| カテゴリ             | 技術                                                      |
+| -------------------- | --------------------------------------------------------- |
+| フレームワーク       | Next.js 16 (App Router)                                   |
+| UI                   | React 19                                                  |
+| 言語                 | TypeScript 5（strict）                                    |
+| スタイリング         | Tailwind CSS v4                                           |
+| パッケージマネージャ | Bun                                                       |
+| 開発環境管理         | Nix flakes                                                |
+| Linter / Formatter   | ESLint 9 + Prettier 3                                     |
+| Git フック           | Husky + lint-staged + commitlint                          |
+| バックエンド         | Hono 4（ヘルス等の軽量 API）、Supabase（Postgres + Auth） |
+| CI/CD                | GitHub Actions                                            |
 
 ## セットアップ
 
@@ -66,34 +66,35 @@ bun dev
 
 ```
 app/                   # Next.js App Router ルート
-app/(routes)/          # アプリのルートグループ
-app/api/[[...route]]/  # Hono エントリーポイント（全 API リクエストをここで受ける）
+app/api/[[...route]]/  # Hono エントリーポイント（例: `/api/health`）
+proxy.ts               # Next.js 16 のプロキシ（Supabase セッション更新）
 components/ui/         # 再利用可能な UI プリミティブ
 features/<name>/       # 機能モジュール（components / hooks / utils / types / api）
-lib/                   # グローバルユーティリティ・API クライアント・定数
+lib/                   # グローバルユーティリティ・Supabase クライアント・定数
+supabase/migrations/   # Postgres マイグレーション（SQL）
 hooks/                 # グローバルカスタムフック
 types/                 # グローバル型定義
 ```
 
-## API
+## API（Hono）
 
-バックエンドは [Hono](https://hono.dev/) を Next.js の Route Handler にマウントする構成。`/api/*` 以下のリクエストが全て Hono に流れる。
-
-```ts
-// ルートの追加例（features/<name>/api.ts）
-export const exampleRoute = new Hono().get('/', (c) => c.json({ message: 'hello' }))
-
-// app/api/[[...route]]/route.ts でマウント
-app.route('/example', exampleRoute)
-// → GET /api/example
-```
-
-動作確認用エンドポイント：
+バックエンドは [Hono](https://hono.dev/) を Next.js の Route Handler にマウントする構成。現状はヘルスチェックなど最小限。
 
 ```bash
 curl http://localhost:3000/api/health
 # → { "status": "ok" }
 ```
+
+追加ルートは `app/api/[[...route]]/route.ts` でマウントする（例: `app.route('/example', exampleRoute)` → `GET /api/example`）。
+
+## Supabase（認証・データベース）
+
+1. [Supabase](https://supabase.com/) でプロジェクトを作成し、**Project URL** と **Publishable key**（anon）を `.env.local` に設定（`.env.example` 参照）。
+2. **Authentication → Providers → Google** を有効化し、クライアント ID / シークレットを設定。
+3. **Authentication → URL Configuration** の **Redirect URLs** に、`{アプリのオリジン}/auth/callback` を追加（例: `http://localhost:3000/auth/callback` と本番 URL）。
+4. SQL エディタまたは [Supabase CLI](https://supabase.com/docs/guides/cli) で `supabase/migrations/20260504120000_profiles.sql` を適用し、`profiles` テーブルと RLS を作成。
+
+ログインは `/login`（Google のみ）。認証後のリダイレクト先はクエリ `next` または `returnTo` で相対パスのみ指定可能（`/auth/callback` 経由でサニタイズ）。
 
 ## 環境変数
 

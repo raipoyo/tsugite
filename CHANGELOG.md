@@ -10,6 +10,51 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- ハッカソン審査向けのMVPページマップを追加。既存の店／継ぎ手ダッシュボードとは別に、デモで迷わない `/demo/*` と `/app/*` の体験導線を作成
+  - `/demo/ryokan` に旅館固定デモシナリオを追加。Archive、Guide、Agentを審査員向けのクリック順で提示
+  - `/demo/pitch` に30秒プレゼン用の大画面ビジュアルを追加
+  - `/auth/login`、`/auth/signup`、`/auth/role` を追加。ハッカソンでは仮ログイン導線として `/app` に入れる構成
+  - `/app` に3機能のエントリーカードとサマリーを追加
+  - `/app/guide`、`/app/guide/scenes/new`、`/app/guide/scenes/[id]`、`/app/guide/scenes/[id]/live`、`/app/guide/logs` を追加。ライブ判定ページはカメラ風UIと判定モックでMVP核心を表現
+  - `/app/archive`、`/app/archive/upload`、`/app/archive/[id]`、`/app/archive/tags`、`/app/archive/timeline` を追加。動画詳細と抽出タグを審査で見せやすくした
+  - `/app/agent`、`/app/agent/history`、`/app/agent/sources` を追加。チャット本体は出典付きのモック会話で確実に見せる構成
+  - `/app/settings/shop`、`/app/settings/members`、`/app/settings/account` を追加。低優先度設定ページは固定情報表示に留めた
+  - `features/hackathon/` にMVP用の固定データ、共通UI、ライブ判定デモ、Agentチャットデモを追加
+  - Playwright確認で見つかったモバイル幅のライブ判定UI横はみ出しを修正
+
+- Archive機能を実装。店主のインタビュー動画から暗黙知を抽出・蓄積する機能
+  - Supabase Storage に動画をアップロードする機能（`interview-videos` バケット）
+  - OpenAI Whisper API による文字起こし機能
+  - GPT-4 による暗黙知タグ抽出（状況・判断・理由の3層構造）
+  - OpenAI Embeddings API による埋め込みベクトル生成
+  - `/shop/archive` ページでインタビュー一覧、暗黙知タグ一覧を表示
+  - `features/archive/` に VideoUploadForm、InterviewsList、TacitTagsList コンポーネントを追加
+  - `/api/archive/transcribe/:id`、`/api/archive/extract/:id`、`/api/archive/embed/:id` API エンドポイントを追加
+- `openai`、`zod`、`ai` パッケージを dependencies に追加
+- `.env.example` に `OPENAI_API_KEY` を追加
+- `supabase/migrations/20260505100000_storage_buckets.sql` でストレージバケットとRLSポリシーを追加
+- `lib/openai.ts` に OpenAI クライアントを追加
+- AI Agent機能を実装。後継者が先代女将に相談できるRAGベースのチャットインターフェース（`/successor/agent`）を追加
+- `ai` (Vercel AI SDK)、`openai`、`zod`、`@ai-sdk/openai`、`@hono/zod-validator` を依存関係に追加。LLMストリーミング、Embedding生成、TTS音声合成を実現
+- `types/agent.ts` を追加。`ChatMessage`、`ChatCitation`、`RAGContext` などのAgent機能用型定義
+- `lib/agent/rag.ts` を追加。OpenAI Embedding生成、pgvectorによる類似タグ検索、関連インタビュー取得、RAGプロンプト生成の実装
+- `POST /api/agent/chat` エンドポイントを追加。質問をEmbedding化し、tacit_tagsとinterviewsを参照してGPT-4による回答をストリーミング生成
+- `POST /api/agent/tts` エンドポイントを追加。OpenAI TTS APIで回答テキストを音声化
+- `features/agent/components/agent-chat.tsx` を追加。チャットUI、メッセージ履歴、音声再生、出典表示、サンプル質問を実装
+- `app/successor/agent/page.tsx` を追加。継ぎ手ダッシュボードから先代女将に相談できるページ
+- `.env.example` に `OPENAI_API_KEY` を追加（OpenAI API利用のため）
+- **Guide機能 (AI弟子モード) を実装**。スマホカメラで現場をかざすと、Vision APIが画像認識し、先代の正しい所作（`reference_scenes`）と照合してフィードバックする
+  - WebRTCでカメラ映像を取得し、1〜2秒ごとにスナップショット撮影
+  - Gemini 2.0 Flash (Google Generative AI) でクラウドVision推論を実施（MVPはオンデバイス推論を見送り）
+  - GPT-4oでフィードバック文を生成（先代の口調で優しく指導）
+  - OpenAI TTS APIで音声読み上げ
+  - `observation_logs`テーブルへ観察結果を自動保存
+  - `/shop/guide`ページと`features/guide/`モジュールを追加
+  - デモシナリオ: 「客室のお茶出し準備」の参照シーンを作成可能
+- Guide feature用のAPI routeを追加（`/api/guide/analyze`, `/api/guide/tts`）
+- `.env.example`に`GOOGLE_GENERATIVE_AI_API_KEY`と`OPENAI_API_KEY`を追加
+- 店向けダッシュボードナビゲーションに「Guide (AI弟子)」リンクを追加
+- Guide feature用の依存関係を追加：`openai`, `@google/generative-ai`, `ai` (Vercel AI SDK)
 - Drizzle を導入し、`drizzle.config.ts` と `db/schema.ts` に `profiles` / `shops` / Archive / Guide / Agent のDBスキーマを定義。DB構造をTypeScriptから確認・生成できるようにした
 - `supabase/migrations/20260505090000_core_feature_schema.sql` で `shops`、`interviews`、`tacit_tags`、`tag_embeddings`、`reference_scenes`、`observation_logs` と RLS policy を追加。ArchiveをGuideとAgentのデータソースにする依存関係へ整理した
 - `package.json` に `db:generate` / `db:studio` scripts を追加。Drizzle Kit 経由のmigration生成とschema確認をBunで実行できるようにした
@@ -49,6 +94,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Googleログイン後に戻り先指定が無い場合、ランディングではなくユーザーのroleに応じて `/shop`、`/successor`、未設定なら `/onboarding/role` へ遷移するようにした
+- 店プロフィール登録済みでも `shops` 行が未作成のユーザーが、Archiveで概要へ戻されGuideで `/register/shop` へ飛ばされる問題を修正。新規保存時と既存ユーザーの機能ページ表示時に `shops` 行を補完するようにした
+- 主要機能PR（Archive / Agent / Guide）を `develop` ベースで統合。共通APIルート、Bun依存管理、既存UIプリミティブ、AI SDK v6 APIに合わせて競合とビルドエラーを解消した
 - ルート `/` はマーケ用ランディング（`app/(marketing)/page.tsx`）。`/sign-in`・`/sign-up` は `/login` へ誘導
 - オンボーディング・店／継ぎ手プロフィールの永続化は Clerk `publicMetadata` ではなく `public.profiles` の `role` / `shop_profile` / `successor_profile` に統一
 - `.env.example` を Supabase（`NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`）と `APP_ORIGIN` に合わせ、`GOOGLE_*` と `AUTH_SESSION_SECRET` の記載を廃止

@@ -1,0 +1,64 @@
+- generic [ref=e1]:
+  - button "Open Next.js Dev Tools" [ref=e101] [cursor=pointer]:
+    - img [ref=e102]
+  - alert [ref=e105]
+  - generic [ref=e106]:
+    - banner [ref=e107]:
+      - generic [ref=e108]:
+        - link "TSUGITE MVP" [ref=e109] [cursor=pointer]:
+          - /url: /app
+        - navigation [ref=e110]:
+          - link "Home" [ref=e111] [cursor=pointer]:
+            - /url: /app
+          - link "Guide" [ref=e112] [cursor=pointer]:
+            - /url: /app/guide
+          - link "Archive" [active] [ref=e113] [cursor=pointer]:
+            - /url: /app/archive
+          - link "Agent" [ref=e114] [cursor=pointer]:
+            - /url: /app/agent
+          - link "Settings" [ref=e115] [cursor=pointer]:
+            - /url: /app/settings/shop
+        - link "デモ導線" [ref=e116] [cursor=pointer]:
+          - /url: /demo/ryokan
+    - main [ref=e221]:
+      - generic [ref=e224]:
+        - paragraph [ref=e225]: Archive
+        - heading "インタビュー動画一覧" [level=1] [ref=e226]
+        - paragraph [ref=e227]: 店主の語りから、継承に必要な判断基準を抽出する。MVPでは動画詳細でタグ抽出済みの状態を強く見せる。
+        - generic [ref=e228]:
+          - link "最重要動画を見る" [ref=e229] [cursor=pointer]:
+            - /url: /app/archive/interview-okami
+          - link "動画アップロード" [ref=e230] [cursor=pointer]:
+            - /url: /app/archive/upload
+      - generic [ref=e231]:
+        - generic [ref=e232]:
+          - heading "動画" [level=2] [ref=e233]
+          - paragraph [ref=e234]: Whisper -> タグ抽出 -> RAG材料化
+        - generic [ref=e235]:
+          - 'link "抽出完了 / 12:48 先代女将インタビュー: 常連客を迎える所作 7 tags 常連様は名前を呼ぶ前に、前回の会話を一言だけ添える。覚えていることを見せすぎないのが品。" [ref=e236] [cursor=pointer]':
+            - /url: /app/archive/interview-okami
+            - generic [ref=e237]:
+              - generic [ref=e238]:
+                - generic [ref=e239]:
+                  - paragraph [ref=e240]: 抽出完了 / 12:48
+                  - 'heading "先代女将インタビュー: 常連客を迎える所作" [level=2] [ref=e241]'
+                - generic [ref=e242]: 7 tags
+              - paragraph [ref=e243]: 常連様は名前を呼ぶ前に、前回の会話を一言だけ添える。覚えていることを見せすぎないのが品。
+          - link "文字起こし済み / 08:15 お茶出しの判断基準 4 tags 熱すぎる茶は急かしているように見える。到着直後は香りが立つ温度を優先する。" [ref=e244] [cursor=pointer]:
+            - /url: /app/archive/interview-tea
+            - generic [ref=e245]:
+              - generic [ref=e246]:
+                - generic [ref=e247]:
+                  - paragraph [ref=e248]: 文字起こし済み / 08:15
+                  - heading "お茶出しの判断基準" [level=2] [ref=e249]
+                - generic [ref=e250]: 4 tags
+              - paragraph [ref=e251]: 熱すぎる茶は急かしているように見える。到着直後は香りが立つ温度を優先する。
+          - link "アップロード済み / 06:32 雨の日の玄関対応 0 tags 傘を受け取る前に足元を見る。濡れている場所が先に危険になる。" [ref=e252] [cursor=pointer]:
+            - /url: /app/archive/interview-rain
+            - generic [ref=e253]:
+              - generic [ref=e254]:
+                - generic [ref=e255]:
+                  - paragraph [ref=e256]: アップロード済み / 06:32
+                  - heading "雨の日の玄関対応" [level=2] [ref=e257]
+                - generic [ref=e258]: 0 tags
+              - paragraph [ref=e259]: 傘を受け取る前に足元を見る。濡れている場所が先に危険になる。

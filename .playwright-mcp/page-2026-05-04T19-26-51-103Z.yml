@@ -1,0 +1,56 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - link "TSUGITE MVP" [ref=e5] [cursor=pointer]:
+          - /url: /app
+        - navigation [ref=e6]:
+          - link "Home" [ref=e7] [cursor=pointer]:
+            - /url: /app
+          - link "Guide" [ref=e8] [cursor=pointer]:
+            - /url: /app/guide
+          - link "Archive" [ref=e9] [cursor=pointer]:
+            - /url: /app/archive
+          - link "Agent" [ref=e10] [cursor=pointer]:
+            - /url: /app/agent
+          - link "Settings" [ref=e11] [cursor=pointer]:
+            - /url: /app/settings/shop
+        - link "デモ導線" [ref=e12] [cursor=pointer]:
+          - /url: /demo/ryokan
+    - main [ref=e14]:
+      - generic [ref=e17]:
+        - paragraph [ref=e18]: Agent
+        - heading "店主AI分身とのチャット" [level=1] [ref=e19]
+        - paragraph [ref=e20]: Archiveの暗黙知タグを出典に、判断理由まで返す。ハッカソンでは音声より、回答と出典がつながることを確実に見せる。
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - generic [ref=e23]:
+            - paragraph [ref=e24]: Okami voice agent
+            - heading "先代女将AI" [level=1] [ref=e25]
+          - generic [ref=e26]:
+            - generic [ref=e28]: 常連の田中様が早く着いたら、部屋に通していいですか？
+            - generic [ref=e30]:
+              - text: すぐ部屋へ通すより、庭側の席で一息ついてもらいなさい。早く来る方は宿を楽しみにしている。待ち時間を詫びるより、季節の一言を添えて歓迎に変えるの。
+              - paragraph [ref=e31]: "参照: 先代女将インタビュー: 常連客を迎える所作"
+          - generic [ref=e33]:
+            - textbox "先代に質問する" [ref=e34]: 雨の日の玄関対応で最初に見ることは？
+            - button "送信" [ref=e35]:
+              - generic [ref=e36]: 送信
+        - generic [ref=e37]:
+          - generic [ref=e38]:
+            - heading "RAG出典" [level=2] [ref=e39]
+            - generic [ref=e40]:
+              - generic [ref=e41]:
+                - paragraph [ref=e42]: 常連客が予定より早く到着した
+                - paragraph [ref=e43]: 早着は期待の表れ。待たせる時間をもてなしに変える。
+              - generic [ref=e44]:
+                - paragraph [ref=e45]: 客室に茶器を置く
+                - paragraph [ref=e46]: 最初に目に入る小物の乱れが、宿全体の印象になる。
+              - generic [ref=e47]:
+                - paragraph [ref=e48]: 雨の日に玄関が混み合う
+                - paragraph [ref=e49]: 客が困っている物理状態を先に解くと、言葉が届く。
+          - generic [ref=e50]:
+            - heading "音声デモ" [level=2] [ref=e51]
+            - paragraph [ref=e52]: 本番API接続時は回答をTTS化。ハッカソン展示では、チャットの返答と出典提示を確実に見せる。
+  - button "Open Next.js Dev Tools" [ref=e60] [cursor=pointer]:
+    - img [ref=e61]

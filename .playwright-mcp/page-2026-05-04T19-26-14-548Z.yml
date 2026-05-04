@@ -1,0 +1,65 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - link "TSUGITE MVP" [ref=e5] [cursor=pointer]:
+          - /url: /app
+        - navigation [ref=e6]:
+          - link "Home" [ref=e7] [cursor=pointer]:
+            - /url: /app
+          - link "Guide" [ref=e8] [cursor=pointer]:
+            - /url: /app/guide
+          - link "Archive" [ref=e9] [cursor=pointer]:
+            - /url: /app/archive
+          - link "Agent" [ref=e10] [cursor=pointer]:
+            - /url: /app/agent
+          - link "Settings" [ref=e11] [cursor=pointer]:
+            - /url: /app/settings/shop
+        - link "デモ導線" [ref=e12] [cursor=pointer]:
+          - /url: /demo/ryokan
+    - main [ref=e14]:
+      - generic [ref=e17]:
+        - paragraph [ref=e18]: Live guide
+        - heading "客室のお茶出し準備 のライブ判定" [level=1] [ref=e19]
+        - paragraph [ref=e20]: カメラ映像を模したデモUI。実装時は端末カメラのフレームをGemma 3へ渡し、正解状態との差分だけを短く返す。
+      - generic [ref=e21]:
+        - generic [ref=e23]:
+          - generic [ref=e29]:
+            - generic [ref=e30]:
+              - paragraph [ref=e31]: Gemma 3 live judge
+              - paragraph [ref=e32]: 絵柄が客側を向いている
+            - generic [ref=e33]: OK
+          - generic [ref=e35]: LIVE
+        - generic [ref=e36]:
+          - generic [ref=e37]:
+            - paragraph [ref=e38]: 一致度スコア
+            - generic [ref=e39]:
+              - paragraph [ref=e40]: "78"
+              - paragraph [ref=e41]: / 100
+            - button "判定を止める" [ref=e45]:
+              - generic [ref=e46]: 判定を止める
+          - generic [ref=e47]:
+            - heading "判定項目" [level=2] [ref=e48]
+            - generic [ref=e49]:
+              - generic [ref=e50]:
+                - generic [ref=e51]:
+                  - paragraph [ref=e52]: 湯呑みの向き
+                  - generic [ref=e53]: OK
+                - paragraph [ref=e54]: 絵柄が客側を向いている
+              - generic [ref=e55]:
+                - generic [ref=e56]:
+                  - paragraph [ref=e57]: 茶托の位置
+                  - generic [ref=e58]: 注意
+                - paragraph [ref=e59]: 右へ2cm寄せると正解に近い
+              - generic [ref=e60]:
+                - generic [ref=e61]:
+                  - paragraph [ref=e62]: 菓子皿の余白
+                  - generic [ref=e63]: OK
+                - paragraph [ref=e64]: 客の利き手側に十分な余白
+              - generic [ref=e65]:
+                - generic [ref=e66]:
+                  - paragraph [ref=e67]: 急須の注ぎ口
+                  - generic [ref=e68]: 注意
+                - paragraph [ref=e69]: 客へ向けない。少し斜め外へ
+  - button "Open Next.js Dev Tools" [ref=e75] [cursor=pointer]:
+    - img [ref=e76]

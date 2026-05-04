@@ -18,21 +18,21 @@ export default function LandingPage() {
             — 小さくなる伝統に、新たな継ぎ手を —
           </p>
           <h1 className="mt-6 max-w-3xl text-4xl font-semibold tracking-tight text-zinc-900 md:text-5xl dark:text-zinc-50">
-            伝統の現場と、次の担い手をつなぐ
+            見て覚えろ、をAIで残して継ぐ
           </h1>
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-zinc-600 dark:text-zinc-400">
-            日本各地で受け継がれてきた技術や文化が、後継者不足のなかでも失われないように。掲載者は募集や体験を公開し、継ぎ手候補は志に合った現場へたどり着けます。
+            Archiveで先代の判断を残し、Guideで現場の所作を判定し、Agentで迷った瞬間に相談する。ハッカソンMVPは旅館シナリオに固定して、継承の核心だけを見せます。
           </p>
 
           <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
-            <Link href="/login" className={btnPrimary}>
-              はじめる
+            <Link href="/demo/ryokan" className={btnPrimary}>
+              旅館デモを見る
             </Link>
-            <Link href="/opportunities" className={btnSecondary}>
-              募集を見る
+            <Link href="/demo/pitch" className={btnSecondary}>
+              ピッチ画面
             </Link>
-            <Link href="/login" className={btnSecondary}>
-              ログイン
+            <Link href="/app" className={btnSecondary}>
+              MVP本体
             </Link>
           </div>
         </Container>
@@ -42,36 +42,32 @@ export default function LandingPage() {
         <Container>
           <div className="grid gap-6 md:grid-cols-2">
             <Card className="p-6">
-              <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-                店として掲載する
-              </h2>
+              <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">Archive</h2>
               <p className="mt-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-                伝統産業や教育現場での「学び」を募集情報として載せられます。Google
-                でログインし、オンボーディングで店側の運用形態を選びます。
+                先代女将へのインタビュー動画から、状況・判断・理由の3層タグを抽出します。
               </p>
               <div className="mt-6">
                 <Link
                   className="text-sm font-medium text-zinc-900 underline-offset-4 hover:underline dark:text-zinc-50"
-                  href="/login"
+                  href="/app/archive/interview-okami"
                 >
-                  店として登録の流れ →
+                  抽出結果を見る →
                 </Link>
               </div>
             </Card>
             <Card className="p-6">
               <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-                継ぎ手として参加する
+                Guide / Agent
               </h2>
               <p className="mt-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-                載っている募集だけが入口ではありません。プロフィールを整え応募ログを一元化できるよう、経路ごと用意していく予定です（MVP
-                ではレイアウトと誘導が中心）。
+                客室準備をライブ判定し、迷った時は先代女将AIに相談。デモで一番見せる部分です。
               </p>
               <div className="mt-6">
                 <Link
                   className="text-sm font-medium text-zinc-900 underline-offset-4 hover:underline dark:text-zinc-50"
-                  href="/login"
+                  href="/app/guide/scenes/tea-service/live"
                 >
-                  継ぎ手として登録する →
+                  ライブ判定を見る →
                 </Link>
               </div>
             </Card>

@@ -1,3 +1,5 @@
+'use client'
+
 import type { ReactNode } from 'react'
 import { cn } from '@/lib/cn'
 
@@ -11,9 +13,10 @@ type TabsProps = {
   activeValue: string
   className?: string
   items: TabItem[]
+  onValueChange?: (value: string) => void
 }
 
-export default function Tabs({ activeValue, className, items }: TabsProps) {
+export default function Tabs({ activeValue, className, items, onValueChange }: TabsProps) {
   const activeItem = items.find((item) => item.value === activeValue) ?? items[0]
 
   return (
@@ -36,6 +39,7 @@ export default function Tabs({ activeValue, className, items }: TabsProps) {
                   : 'text-ink-4 hover:bg-white/70 hover:text-ink',
               )}
               key={item.value}
+              onClick={() => onValueChange?.(item.value)}
               role="tab"
               type="button"
             >

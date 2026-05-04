@@ -65,6 +65,12 @@ export default function SiteHeader() {
             <Link className="hover:text-zinc-950 dark:hover:text-white" href="/opportunities">
               募集
             </Link>
+            <Link className="hover:text-zinc-950 dark:hover:text-white" href="/demo/ryokan">
+              デモ
+            </Link>
+            <Link className="hover:text-zinc-950 dark:hover:text-white" href="/app">
+              MVP
+            </Link>
             {userId ? (
               <AuthenticatedNavLinks role={role} />
             ) : (

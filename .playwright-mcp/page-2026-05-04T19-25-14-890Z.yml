@@ -1,0 +1,91 @@
+- main [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e6]:
+      - paragraph [ref=e7]: Hackathon demo scenario
+      - heading "山あいの宿 つぎて庵 の引き継ぎ" [level=1] [ref=e8]
+      - paragraph [ref=e9]: 旅館の客室準備を題材に、Archiveで先代の判断を残し、Guideで所作を判定し、Agentで迷った瞬間に相談する流れを一画面で見せる。
+      - generic [ref=e10]:
+        - link "ライブ判定へ" [ref=e11] [cursor=pointer]:
+          - /url: /app/guide/scenes/tea-service/live
+        - link "AI分身へ相談" [ref=e12] [cursor=pointer]:
+          - /url: /app/agent
+    - generic [ref=e13]:
+      - generic [ref=e14]:
+        - heading "デモ導線" [level=2] [ref=e15]
+        - paragraph [ref=e16]: 審査員向けのクリック順
+      - generic [ref=e17]:
+        - link "Archiveを見る 1 先代女将のインタビューから、状況・判断・理由のタグを抽出済みとして見せる。" [ref=e18] [cursor=pointer]:
+          - /url: /app/archive/interview-okami
+          - generic [ref=e19]:
+            - generic [ref=e20]:
+              - heading "Archiveを見る" [level=2] [ref=e22]
+              - generic [ref=e23]: "1"
+            - paragraph [ref=e24]: 先代女将のインタビューから、状況・判断・理由のタグを抽出済みとして見せる。
+        - link "Guideで判定 2 客室のお茶出し準備をカメラ風UIで判定。ズレた所作だけを短く返す。" [ref=e25] [cursor=pointer]:
+          - /url: /app/guide/scenes/tea-service/live
+          - generic [ref=e26]:
+            - generic [ref=e27]:
+              - heading "Guideで判定" [level=2] [ref=e29]
+              - generic [ref=e30]: "2"
+            - paragraph [ref=e31]: 客室のお茶出し準備をカメラ風UIで判定。ズレた所作だけを短く返す。
+        - link "Agentに相談 3 抽出済みタグを出典に、先代女将の口調で判断を返す。" [ref=e32] [cursor=pointer]:
+          - /url: /app/agent
+          - generic [ref=e33]:
+            - generic [ref=e34]:
+              - heading "Agentに相談" [level=2] [ref=e36]
+              - generic [ref=e37]: "3"
+            - paragraph [ref=e38]: 抽出済みタグを出典に、先代女将の口調で判断を返す。
+    - generic [ref=e39]:
+      - generic [ref=e40]:
+        - heading "登録シーン" [level=2] [ref=e42]
+        - generic [ref=e43]:
+          - link "ライブ判定対応 / score 82 客室のお茶出し準備 MVP核心 湯呑みの向き、茶托の余白、菓子皿の位置を先代の正解状態と比較。" [ref=e44] [cursor=pointer]:
+            - /url: /app/guide/scenes/tea-service
+            - generic [ref=e45]:
+              - generic [ref=e46]:
+                - generic [ref=e47]:
+                  - paragraph [ref=e48]: ライブ判定対応 / score 82
+                  - heading "客室のお茶出し準備" [level=2] [ref=e49]
+                - generic [ref=e50]: MVP核心
+              - paragraph [ref=e51]: 湯呑みの向き、茶托の余白、菓子皿の位置を先代の正解状態と比較。
+          - link "登録済み / score 74 朝の打ち水 次点 玄関石畳の濡らし方と客導線の安全性を確認。" [ref=e52] [cursor=pointer]:
+            - /url: /app/guide/scenes/morning-water
+            - generic [ref=e53]:
+              - generic [ref=e54]:
+                - generic [ref=e55]:
+                  - paragraph [ref=e56]: 登録済み / score 74
+                  - heading "朝の打ち水" [level=2] [ref=e57]
+                - generic [ref=e58]: 次点
+              - paragraph [ref=e59]: 玄関石畳の濡らし方と客導線の安全性を確認。
+          - link "モック / score 68 客室最終確認 低 床の間、浴衣、香り、窓の開き具合をチェック。" [ref=e60] [cursor=pointer]:
+            - /url: /app/guide/scenes/room-check
+            - generic [ref=e61]:
+              - generic [ref=e62]:
+                - generic [ref=e63]:
+                  - paragraph [ref=e64]: モック / score 68
+                  - heading "客室最終確認" [level=2] [ref=e65]
+                - generic [ref=e66]: 低
+              - paragraph [ref=e67]: 床の間、浴衣、香り、窓の開き具合をチェック。
+      - generic [ref=e68]:
+        - heading "抽出された暗黙知" [level=2] [ref=e70]
+        - generic [ref=e71]:
+          - generic [ref=e72]:
+            - generic [ref=e74]:
+              - paragraph [ref=e75]: 部屋へ急がせず、庭が見える席で温かい茶を出す
+              - heading "常連客が予定より早く到着した" [level=2] [ref=e76]
+            - paragraph [ref=e77]: 早着は期待の表れ。待たせる時間をもてなしに変える。
+          - generic [ref=e78]:
+            - generic [ref=e80]:
+              - paragraph [ref=e81]: 湯呑みの絵柄を客側へ、茶托の木目を横に揃える
+              - heading "客室に茶器を置く" [level=2] [ref=e82]
+            - paragraph [ref=e83]: 最初に目に入る小物の乱れが、宿全体の印象になる。
+          - generic [ref=e84]:
+            - generic [ref=e86]:
+              - paragraph [ref=e87]: 挨拶より先に濡れた荷物の置き場を作る
+              - heading "雨の日に玄関が混み合う" [level=2] [ref=e88]
+            - paragraph [ref=e89]: 客が困っている物理状態を先に解くと、言葉が届く。
+          - generic [ref=e90]:
+            - generic [ref=e92]:
+              - paragraph [ref=e93]: 否定せず、抜けた一点だけを短く戻す
+              - heading "新人が手順を忘れた" [level=2] [ref=e94]
+            - paragraph [ref=e95]: 所作は緊張で崩れる。注意量を増やすほど再現性が落ちる。

@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 
 import { createClient } from '@/lib/supabase/server'
 import { parseUserRole } from '@/lib/roles'
+import { ensureShopForProfile } from '@/lib/shops'
 
 const MAX_LENGTH = 2000
 
@@ -59,6 +60,11 @@ export async function saveShopProfile(
     .eq('id', user.id)
 
   if (updateError) {
+    return { error: 'required' }
+  }
+
+  const shop = await ensureShopForProfile(supabase, user.id, shop_profile)
+  if (!shop) {
     return { error: 'required' }
   }
 

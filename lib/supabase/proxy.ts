@@ -1,9 +1,17 @@
 import { createServerClient } from '@supabase/ssr'
 import { type NextRequest, NextResponse } from 'next/server'
 
+import { sanitizeReturnTo } from '@/lib/sanitize-return-to'
+
+const PROTECTED_PREFIXES = ['/shop', '/successor', '/register', '/onboarding'] as const
+
+function isProtectedPath(pathname: string): boolean {
+  return PROTECTED_PREFIXES.some((p) => pathname === p || pathname.startsWith(`${p}/`))
+}
+
 /**
- * Refreshes the Supabase session from cookies. Does not redirect anonymous users
- * so public routes (e.g. `/`) stay reachable.
+ * Refreshes the Supabase session from cookies. Redirects anonymous users away from
+ * protected app sections (shop / successor / register / onboarding).
  */
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -34,7 +42,19 @@ export async function updateSession(request: NextRequest) {
     },
   )
 
-  await supabase.auth.getClaims()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  const pathname = request.nextUrl.pathname
+  if (isProtectedPath(pathname) && !user) {
+    const login = new URL('/login', request.url)
+    const returnTo = sanitizeReturnTo(`${pathname}${request.nextUrl.search}`)
+    if (returnTo !== '/') {
+      login.searchParams.set('returnTo', returnTo)
+    }
+    return NextResponse.redirect(login)
+  }
 
   return supabaseResponse
 }

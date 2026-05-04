@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
+
 import './globals.css'
 
 const geistSans = Geist({
@@ -13,8 +14,9 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'TSUGITE Design System',
-  description: 'TSUGITE のフロントエンドデザインシステム',
+  title: 'TSUGITE — 伝統に、新たな継ぎ手を',
+  description:
+    '日本各地の伝統技術・文化を担う現場と、学び・継承を望む継ぎ手候補をつなぐプラットフォーム。',
 }
 
 export default function RootLayout({

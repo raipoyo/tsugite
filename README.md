@@ -67,7 +67,7 @@ bun dev
 ```
 app/                   # Next.js App Router ルート
 app/api/[[...route]]/  # Hono エントリーポイント（例: `/api/health`）
-proxy.ts               # Next.js 16 のプロキシ（Supabase セッション更新）
+proxy.ts               # Next.js 16 のプロキシ（Supabase セッション更新・保護ルート）
 components/ui/         # 再利用可能な UI プリミティブ
 features/<name>/       # 機能モジュール（components / hooks / utils / types / api）
 lib/                   # グローバルユーティリティ・Supabase クライアント・定数
@@ -87,18 +87,33 @@ curl http://localhost:3000/api/health
 
 追加ルートは `app/api/[[...route]]/route.ts` でマウントする（例: `app.route('/example', exampleRoute)` → `GET /api/example`）。
 
+## 主要ルート（MVP）
+
+| 区分                   | パス（例）                                                                     |
+| ---------------------- | ------------------------------------------------------------------------------ |
+| マーケ公開             | `/`、`/opportunities`、`/opportunities/[id]`、`/terms`、`/privacy`、`/contact` |
+| デザインシステム       | `/design-system`                                                               |
+| 認証（Supabase）       | `/login`（Google）、`/auth/callback`                                           |
+| オンボーディング       | `/onboarding/role`（`profiles.role` に `shop` / `successor` を保存）           |
+| 店プロフィール登録     | `/register/shop` → 保存後 `/shop`                                              |
+| 継ぎ手プロフィール登録 | `/register/successor` → 保存後 `/successor`                                    |
+| 店向けコンソール       | `/shop` ほか `/shop/profile`、`/shop/listings`、`/shop/applications` など      |
+| 継ぎ手コンソール       | `/successor`、`/successor/profile`、`/successor/applications`                  |
+
+`proxy.ts` で `/shop/*`、`/successor/*`、`/register/*`、`/onboarding/*` はサインイン必須。レイアウト側でロール不一致のときは適切なコンソールまたはオンボーディングへリダイレクトする。
+
 ## Supabase（認証・データベース）
 
 1. [Supabase](https://supabase.com/) でプロジェクトを作成し、**Project URL** と **Publishable key**（anon）を `.env.local` に設定（`.env.example` 参照）。
 2. **Authentication → Providers → Google** を有効化し、クライアント ID / シークレットを設定。
 3. **Authentication → URL Configuration** の **Redirect URLs** に、`{アプリのオリジン}/auth/callback` を追加（例: `http://localhost:3000/auth/callback` と本番 URL）。
-4. SQL エディタまたは [Supabase CLI](https://supabase.com/docs/guides/cli) で `supabase/migrations/20260504120000_profiles.sql` を適用し、`profiles` テーブルと RLS を作成。
+4. SQL エディタまたは [Supabase CLI](https://supabase.com/docs/guides/cli) で `supabase/migrations/` 内の SQL を順に適用し、`profiles` テーブルと RLS を作成。
 
 ログインは `/login`（Google のみ）。認証後のリダイレクト先はクエリ `next` または `returnTo` で相対パスのみ指定可能（`/auth/callback` 経由でサニタイズ）。
 
 ## 環境変数
 
-`.env.local` を使用（`.gitignore` で除外済み）。チームメンバーから直接共有を受けること。キーの一覧は `.env.example` を参照。
+`.env.local` を使用（`.gitignore` で除外済み）。キーの一覧は [`.env.example`](./.env.example) を参照。
 
 ## Contributing
 

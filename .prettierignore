@@ -1,0 +1,4 @@
+.next/
+node_modules/
+.clerk/.tmp/
+supabase/.temp/

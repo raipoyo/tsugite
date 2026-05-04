@@ -194,4 +194,6 @@ DATABASE_URL=
 bun dev        # 開発サーバー起動 (http://localhost:3000)
 bun run build  # 本番ビルド確認
 bun run lint   # ESLint 実行
+bun run db:generate # Drizzle schema から migration 生成
+bun run db:studio   # Drizzle Studio 起動
 ```

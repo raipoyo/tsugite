@@ -21,6 +21,7 @@
 | Linter / Formatter   | ESLint 9 + Prettier 3            |
 | Git フック           | Husky + lint-staged + commitlint |
 | バックエンド         | Hono 4                           |
+| 認証                 | Clerk（`@clerk/nextjs`）         |
 | CI/CD                | GitHub Actions                   |
 
 ## セットアップ
@@ -29,7 +30,7 @@
 
 ```bash
 # 1. Nix をインストール（未導入の場合）
-curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
+  curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
 
 # 2. direnv をインストール
 brew install direnv nix-direnv
@@ -95,9 +96,25 @@ curl http://localhost:3000/api/health
 # → { "status": "ok" }
 ```
 
+## 主要ルート（MVP）
+
+| 区分                   | パス（例）                                                                     |
+| ---------------------- | ------------------------------------------------------------------------------ |
+| マーケ公開             | `/`、`/opportunities`、`/opportunities/[id]`、`/terms`、`/privacy`、`/contact` |
+| 認証（Clerk）          | `/sign-in`、`/sign-up`                                                         |
+| オンボーディング       | `/onboarding/role`（`publicMetadata.role` に `shop` / `successor` を保存）     |
+| 店プロフィール登録     | `/register/shop` → 保存後 `/shop`                                              |
+| 継ぎ手プロフィール登録 | `/register/successor` → 保存後 `/successor`                                    |
+| 店向けコンソール       | `/shop` ほか `/shop/profile`、`/shop/listings`、`/shop/applications` など      |
+| 継ぎ手コンソール       | `/successor`、`/successor/profile`、`/successor/applications`                  |
+
+`middleware.ts` で `/shop/*`、`/successor/*`、`/register/*`、`/onboarding/*` はサインイン必須。レイアウト側でロール不一致のときは適切なコンソールまたはオンボーディングへリダイレクトする。
+
 ## 環境変数
 
-`.env.local` を使用（`.gitignore` で除外済み）。チームメンバーから直接共有を受けること。キーの一覧は `.env.example` を参照。
+`.env.local` を使用（`.gitignore` で除外済み）。キーの一覧は [`.env.example`](./.env.example) を参照。
+
+開発時は [Clerk Dashboard](https://dashboard.clerk.com/) のアプリケーション設定で、許可オリジン・リダイレクト URL に `http://localhost:3000`（および将来の本番 URL）を追加する。サインイン／サインアップ後の既定遷移は `.env.example` の `NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL` 等で `/onboarding/role` を指す。
 
 ## Contributing
 

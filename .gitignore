@@ -44,3 +44,6 @@ next-env.d.ts
 # nix / direnv
 .direnv/
 result
+
+# clerk configuration (can include secrets)
+/.clerk/

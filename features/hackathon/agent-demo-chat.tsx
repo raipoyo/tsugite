@@ -4,7 +4,9 @@ import { useState } from 'react'
 
 import Button from '@/components/ui/button'
 import Card from '@/components/ui/card'
-import { agentMessages, tacitTags } from '@/features/hackathon/mvp-data'
+
+import { agentMessages } from '@/features/hackathon/mvp-data'
+import type { AppTacitTag } from './real-data'
 
 type Message = {
   role: 'assistant' | 'user'
@@ -12,24 +14,33 @@ type Message = {
   source?: string
 }
 
-const replies = [
-  'それは急がなくていい。まず相手が何に困っているかを見るの。荷物、足元、表情。この順で整えると、言葉は少なくて済むわ。',
-  'お茶は熱さより香りを優先しなさい。到着直後のお客様には、急かされている印象を残さないこと。',
-  '新人には全部を直させない。一番印象に残る一点だけ戻して、次の成功を作りなさい。',
-]
+function pickTag(input: string, tags: AppTacitTag[]): AppTacitTag | null {
+  if (tags.length === 0) return null
+  const normalized = input.toLowerCase()
+  return (
+    tags.find((tag) =>
+      [tag.situation, tag.judgment, tag.reason].some((text) =>
+        normalized.includes(text.slice(0, 2).toLowerCase()),
+      ),
+    ) ?? tags[0]
+  )
+}
 
-export default function AgentDemoChat() {
+export default function AgentDemoChat({ tags }: { tags: AppTacitTag[] }) {
   const [messages, setMessages] = useState<Message[]>([...agentMessages])
   const [input, setInput] = useState('雨の日の玄関対応で最初に見ることは？')
 
   function submit() {
     const value = input.trim()
     if (!value) return
-    const reply = replies[messages.length % replies.length]
+    const tag = pickTag(value, tags)
+    const reply = tag
+      ? `${tag.judgment}。理由は、${tag.reason}`
+      : 'まだ参照できる暗黙知タグがない。Archiveで動画を処理して、状況・判断・理由を登録してから相談して。'
     setMessages((current) => [
       ...current,
       { role: 'user', text: value },
-      { role: 'assistant', text: reply, source: '暗黙知タグ: 雨の日の玄関対応' },
+      { role: 'assistant', text: reply, source: tag ? `暗黙知タグ: ${tag.situation}` : undefined },
     ])
     setInput('')
   }
@@ -87,8 +98,8 @@ export default function AgentDemoChat() {
         <Card className="p-5">
           <h2 className="text-lg font-semibold text-ink">RAG出典</h2>
           <div className="mt-4 space-y-3">
-            {tacitTags.slice(0, 3).map((tag) => (
-              <div key={tag.situation} className="rounded-xl border border-washi-3 bg-white p-3">
+            {tags.slice(0, 3).map((tag) => (
+              <div key={tag.id} className="rounded-xl border border-washi-3 bg-white p-3">
                 <p className="text-sm font-semibold text-ink">{tag.situation}</p>
                 <p className="mt-1 text-xs leading-5 text-ink-4">{tag.reason}</p>
               </div>

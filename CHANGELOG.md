@@ -21,6 +21,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - `/app/settings/shop`、`/app/settings/members`、`/app/settings/account` を追加。低優先度設定ページは固定情報表示に留めた
   - `features/hackathon/` にMVP用の固定データ、共通UI、ライブ判定デモ、Agentチャットデモを追加
   - Playwright確認で見つかったモバイル幅のライブ判定UI横はみ出しを修正
+  - `/app/*` のMVP画面をSupabase実データ対応に変更。ログイン中は `reference_scenes`、`interviews`、`tacit_tags`、`observation_logs` を表示し、未ログイン時だけデモデータにフォールバック
+  - `/app/guide/scenes/[id]/live` から観察ログを `observation_logs` に保存できるように変更
+  - `/app/archive/upload` を実アップロードフォームに差し替え、Supabase Storage と `interviews` レコード作成へ接続
+  - `/app/agent` の出典表示と返答生成を実 `tacit_tags` ベースに変更
 
 - Archive機能を実装。店主のインタビュー動画から暗黙知を抽出・蓄積する機能
   - Supabase Storage に動画をアップロードする機能（`interview-videos` バケット）

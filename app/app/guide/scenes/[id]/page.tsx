@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 
-import { guideScenes } from '@/features/hackathon/mvp-data'
 import { LinkButton, MvpCard, PageHeader, SectionTitle } from '@/features/hackathon/mvp-ui'
+import { getAppData } from '@/features/hackathon/real-data'
 
 export default async function GuideSceneDetailPage({
   params,
@@ -9,8 +9,10 @@ export default async function GuideSceneDetailPage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  const scene = guideScenes.find((item) => item.id === id)
+  const { scenes } = await getAppData()
+  const scene = scenes.find((item) => item.id === id)
   if (!scene) notFound()
+  const rules = Object.entries(scene.correctState)
 
   return (
     <main className="space-y-8">
@@ -30,23 +32,22 @@ export default async function GuideSceneDetailPage({
       <section>
         <SectionTitle>正解状態</SectionTitle>
         <div className="grid gap-5 md:grid-cols-3">
-          {['湯呑みの絵柄は客側', '茶托は盆の中心より少し右', '急須の注ぎ口は客へ向けない'].map(
-            (rule) => (
-              <MvpCard
-                key={rule}
-                title={rule}
-                description="先代女将のインタビューと正解画像から抽出した確認ポイント。"
-              />
-            ),
-          )}
+          {(rules.length > 0 ? rules : [['正解状態', '登録済み']]).map(([key, value]) => (
+            <MvpCard
+              key={key}
+              title={key}
+              description={typeof value === 'string' ? value : JSON.stringify(value)}
+            />
+          ))}
         </div>
       </section>
       <section>
         <SectionTitle>過去ログ</SectionTitle>
         <div className="grid gap-5 md:grid-cols-3">
-          {['82点: 茶托位置を修正', '91点: ほぼ正解', '76点: 急須の向きに注意'].map((log) => (
-            <MvpCard key={log} title={log} description="観察結果、差分、AIフィードバックを保存。" />
-          ))}
+          <MvpCard
+            title={`${scene.lastScore || '--'}点 / ${scene.logs} logs`}
+            description="ライブ判定画面から保存された観察結果、差分、AIフィードバックを参照する。"
+          />
         </div>
       </section>
     </main>

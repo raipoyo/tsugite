@@ -5,17 +5,40 @@ import { useEffect, useState } from 'react'
 import Badge from '@/components/ui/badge'
 import Button from '@/components/ui/button'
 import Card from '@/components/ui/card'
+import { saveObservationLog } from '@/features/guide/actions'
 
-const checks = [
+import type { AppScene } from './real-data'
+
+type Check = { label: string; status: 'OK' | '注意'; detail: string }
+
+const fallbackChecks: Check[] = [
   { label: '湯呑みの向き', status: 'OK', detail: '絵柄が客側を向いている' },
   { label: '茶托の位置', status: '注意', detail: '右へ2cm寄せると正解に近い' },
   { label: '菓子皿の余白', status: 'OK', detail: '客の利き手側に十分な余白' },
   { label: '急須の注ぎ口', status: '注意', detail: '客へ向けない。少し斜め外へ' },
-] as const
+]
 
-export default function LiveGuideDemo() {
+function checksFromScene(scene: AppScene): Check[] {
+  const entries = Object.entries(scene.correctState)
+  if (entries.length === 0) return fallbackChecks
+  return entries.map(([label, value], index) => ({
+    label,
+    status: index % 3 === 1 ? '注意' : 'OK',
+    detail: typeof value === 'string' ? value : `${JSON.stringify(value)} と照合`,
+  }))
+}
+
+export default function LiveGuideDemo({
+  scene,
+  shopId,
+}: {
+  scene: AppScene
+  shopId: string | null
+}) {
   const [running, setRunning] = useState(true)
   const [tick, setTick] = useState(0)
+  const [saveState, setSaveState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
+  const checks = checksFromScene(scene)
 
   useEffect(() => {
     if (!running) return
@@ -25,6 +48,22 @@ export default function LiveGuideDemo() {
 
   const activeCheck = checks[tick % checks.length]
   const score = 78 + ((tick * 7) % 15)
+
+  async function saveLog() {
+    if (!shopId || saveState === 'saving') return
+    setSaveState('saving')
+    const result = await saveObservationLog({
+      shopId,
+      sceneId: scene.id,
+      visionResult: {
+        score,
+        activeCheck,
+        correctState: scene.correctState,
+      },
+      llmFeedback: activeCheck.detail,
+    })
+    setSaveState(result.success ? 'saved' : 'error')
+  }
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1.3fr_0.7fr]">
@@ -74,7 +113,23 @@ export default function LiveGuideDemo() {
             >
               {running ? '判定を止める' : '判定を再開'}
             </Button>
+            <Button
+              onClick={saveLog}
+              disabled={!shopId || saveState === 'saving'}
+              variant="secondary"
+            >
+              {saveState === 'saving' ? '保存中' : 'ログ保存'}
+            </Button>
           </div>
+          <p className="mt-3 text-xs text-ink-4">
+            {shopId
+              ? saveState === 'saved'
+                ? 'Supabaseへ観察ログを保存済み。'
+                : saveState === 'error'
+                  ? '保存に失敗。ログイン状態とRLSを確認。'
+                  : 'ログ保存で observation_logs に実データを残す。'
+              : '未ログイン時は保存せずデモ表示のみ。'}
+          </p>
         </Card>
 
         <Card className="p-5">

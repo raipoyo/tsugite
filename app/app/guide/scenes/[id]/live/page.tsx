@@ -1,12 +1,13 @@
 import { notFound } from 'next/navigation'
 
 import LiveGuideDemo from '@/features/hackathon/live-guide-demo'
-import { guideScenes } from '@/features/hackathon/mvp-data'
 import { PageHeader } from '@/features/hackathon/mvp-ui'
+import { getAppData } from '@/features/hackathon/real-data'
 
 export default async function GuideLivePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const scene = guideScenes.find((item) => item.id === id)
+  const { shopId, scenes } = await getAppData()
+  const scene = scenes.find((item) => item.id === id)
   if (!scene) notFound()
 
   return (
@@ -14,9 +15,9 @@ export default async function GuideLivePage({ params }: { params: Promise<{ id: 
       <PageHeader
         eyebrow="Live guide"
         title={`${scene.name} のライブ判定`}
-        description="カメラ映像を模したデモUI。実装時は端末カメラのフレームをGemma 3へ渡し、正解状態との差分だけを短く返す。"
+        description="登録済みの正解状態を使ってライブ判定する。実カメラ接続前でも、観察ログはSupabaseへ保存できる。"
       />
-      <LiveGuideDemo />
+      <LiveGuideDemo scene={scene} shopId={shopId} />
     </main>
   )
 }

@@ -1,7 +1,11 @@
 import Card from '@/components/ui/card'
 import { LinkButton, PageHeader } from '@/features/hackathon/mvp-ui'
+import { getAppData } from '@/features/hackathon/real-data'
 
-export default function NewScenePage() {
+export default async function NewScenePage() {
+  const { scenes } = await getAppData()
+  const primaryScene = scenes[0]
+
   return (
     <main className="space-y-6">
       <PageHeader
@@ -9,7 +13,9 @@ export default function NewScenePage() {
         title="正解の所作を登録"
         description="本番では店主がスマホで正解状態を撮影し、チェック項目をAIが初期生成する。ハッカソンでは事前登録済みの旅館シーンを使う。"
         actions={
-          <LinkButton href="/app/guide/scenes/tea-service/live">登録済みデモを見る</LinkButton>
+          <LinkButton href={`/app/guide/scenes/${primaryScene?.id ?? 'tea-service'}/live`}>
+            登録済みシーンを見る
+          </LinkButton>
         }
       />
       <Card className="p-6">

@@ -1,7 +1,10 @@
-import { archiveInterviews } from '@/features/hackathon/mvp-data'
 import { LinkButton, MvpCard, PageHeader, SectionTitle } from '@/features/hackathon/mvp-ui'
+import { getAppData } from '@/features/hackathon/real-data'
 
-export default function ArchivePage() {
+export default async function ArchivePage() {
+  const { interviews, isReal } = await getAppData()
+  const primaryInterview = interviews[0]
+
   return (
     <main className="space-y-8">
       <PageHeader
@@ -10,7 +13,9 @@ export default function ArchivePage() {
         description="店主の語りから、継承に必要な判断基準を抽出する。MVPでは動画詳細でタグ抽出済みの状態を強く見せる。"
         actions={
           <>
-            <LinkButton href="/app/archive/interview-okami">最重要動画を見る</LinkButton>
+            <LinkButton href={`/app/archive/${primaryInterview?.id ?? 'interview-okami'}`}>
+              最新動画を見る
+            </LinkButton>
             <LinkButton href="/app/archive/upload" variant="secondary">
               動画アップロード
             </LinkButton>
@@ -18,9 +23,11 @@ export default function ArchivePage() {
         }
       />
       <section>
-        <SectionTitle note="Whisper -> タグ抽出 -> RAG材料化">動画</SectionTitle>
+        <SectionTitle note={isReal ? 'Supabase interviews' : 'Whisper -> タグ抽出 -> RAG材料化'}>
+          動画
+        </SectionTitle>
         <div className="space-y-4">
-          {archiveInterviews.map((interview) => (
+          {interviews.map((interview) => (
             <MvpCard
               key={interview.id}
               title={interview.title}

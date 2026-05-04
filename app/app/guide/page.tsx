@@ -1,7 +1,10 @@
-import { guideScenes } from '@/features/hackathon/mvp-data'
 import { LinkButton, MvpCard, PageHeader, SectionTitle } from '@/features/hackathon/mvp-ui'
+import { getAppData } from '@/features/hackathon/real-data'
 
-export default function GuidePage() {
+export default async function GuidePage() {
+  const { isReal, scenes } = await getAppData()
+  const primaryScene = scenes[0]
+
   return (
     <main className="space-y-8">
       <PageHeader
@@ -10,7 +13,9 @@ export default function GuidePage() {
         description="店主が残した正解状態を、後継者が現場で再現できているか判定する。MVPでは客室のお茶出し準備に集中。"
         actions={
           <>
-            <LinkButton href="/app/guide/scenes/tea-service/live">ライブ判定</LinkButton>
+            <LinkButton href={`/app/guide/scenes/${primaryScene?.id ?? 'tea-service'}/live`}>
+              ライブ判定
+            </LinkButton>
             <LinkButton href="/app/guide/scenes/new" variant="secondary">
               シーン登録
             </LinkButton>
@@ -18,9 +23,11 @@ export default function GuidePage() {
         }
       />
       <section>
-        <SectionTitle note="デモでは1つ目だけを深く見せる">登録済みシーン</SectionTitle>
+        <SectionTitle note={isReal ? 'Supabase reference_scenes' : 'デモデータ'}>
+          登録済みシーン
+        </SectionTitle>
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {guideScenes.map((scene) => (
+          {scenes.map((scene) => (
             <MvpCard
               key={scene.id}
               title={scene.name}

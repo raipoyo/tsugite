@@ -1,12 +1,9 @@
 import { MvpCard, PageHeader, SectionTitle } from '@/features/hackathon/mvp-ui'
+import { getObservationLogs } from '@/features/hackathon/real-data'
 
-const logs = [
-  '茶托を右へ2cm。次回改善済み',
-  '湯呑みの向き OK。菓子皿の余白 OK',
-  '急須の注ぎ口が客側。音声で注意',
-]
+export default async function GuideLogsPage() {
+  const logs = await getObservationLogs()
 
-export default function GuideLogsPage() {
   return (
     <main className="space-y-8">
       <PageHeader
@@ -17,12 +14,12 @@ export default function GuideLogsPage() {
       <section>
         <SectionTitle>ログ</SectionTitle>
         <div className="space-y-4">
-          {logs.map((log, index) => (
+          {logs.map((log) => (
             <MvpCard
-              key={log}
-              title={log}
-              description="2026-05-05 旅館デモ / 客室のお茶出し準備"
-              badge={`${86 - index * 4}点`}
+              key={log.id}
+              title={log.feedback}
+              description={`${log.observedAt} / ${log.sceneName}`}
+              badge={log.score === null ? undefined : `${log.score}点`}
             />
           ))}
         </div>

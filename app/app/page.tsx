@@ -1,4 +1,3 @@
-import { archiveInterviews, guideScenes, mvpMetrics } from '@/features/hackathon/mvp-data'
 import {
   LinkButton,
   MvpCard,
@@ -6,8 +5,12 @@ import {
   SectionTitle,
   StatCard,
 } from '@/features/hackathon/mvp-ui'
+import { getAppData } from '@/features/hackathon/real-data'
 
-export default function MvpHomePage() {
+export default async function MvpHomePage() {
+  const { interviews, isReal, metrics, scenes } = await getAppData()
+  const primaryScene = scenes[0]
+
   return (
     <main className="space-y-8">
       <PageHeader
@@ -16,7 +19,9 @@ export default function MvpHomePage() {
         description="Guideで現場判定、Archiveで暗黙知抽出、Agentで先代AIに相談。設定や認証は後回しにして、審査員が触る核心だけを前面に出す。"
         actions={
           <>
-            <LinkButton href="/app/guide/scenes/tea-service/live">ライブ判定を開く</LinkButton>
+            <LinkButton href={`/app/guide/scenes/${primaryScene?.id ?? 'tea-service'}/live`}>
+              ライブ判定を開く
+            </LinkButton>
             <LinkButton href="/app/agent" variant="secondary">
               AI分身に相談
             </LinkButton>
@@ -25,13 +30,15 @@ export default function MvpHomePage() {
       />
 
       <section className="grid gap-4 md:grid-cols-3">
-        {mvpMetrics.map((metric) => (
+        {metrics.map((metric) => (
           <StatCard key={metric.label} {...metric} />
         ))}
       </section>
 
       <section>
-        <SectionTitle note="優先度順">機能エントリー</SectionTitle>
+        <SectionTitle note={isReal ? '実データ接続中' : '未ログイン時はデモデータ'}>
+          機能エントリー
+        </SectionTitle>
         <div className="grid gap-5 lg:grid-cols-3">
           <MvpCard
             title="Guide"
@@ -58,7 +65,7 @@ export default function MvpHomePage() {
         <div>
           <SectionTitle>最近のGuide</SectionTitle>
           <div className="space-y-4">
-            {guideScenes.slice(0, 2).map((scene) => (
+            {scenes.slice(0, 2).map((scene) => (
               <MvpCard
                 key={scene.id}
                 title={scene.name}
@@ -73,7 +80,7 @@ export default function MvpHomePage() {
         <div>
           <SectionTitle>最近のArchive</SectionTitle>
           <div className="space-y-4">
-            {archiveInterviews.slice(0, 2).map((interview) => (
+            {interviews.slice(0, 2).map((interview) => (
               <MvpCard
                 key={interview.id}
                 title={interview.title}

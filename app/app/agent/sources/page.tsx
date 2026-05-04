@@ -1,7 +1,9 @@
-import { tacitTags } from '@/features/hackathon/mvp-data'
 import { MvpCard, PageHeader, SectionTitle } from '@/features/hackathon/mvp-ui'
+import { getAppData } from '@/features/hackathon/real-data'
 
-export default function AgentSourcesPage() {
+export default async function AgentSourcesPage() {
+  const { tags } = await getAppData()
+
   return (
     <main className="space-y-8">
       <PageHeader
@@ -12,9 +14,9 @@ export default function AgentSourcesPage() {
       <section>
         <SectionTitle>出典</SectionTitle>
         <div className="grid gap-5 md:grid-cols-2">
-          {tacitTags.map((tag) => (
+          {tags.map((tag) => (
             <MvpCard
-              key={tag.situation}
+              key={tag.id}
               title={tag.situation}
               description={tag.reason}
               meta={tag.judgment}

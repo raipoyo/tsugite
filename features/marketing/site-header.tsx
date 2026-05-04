@@ -46,35 +46,32 @@ export default function SiteHeader() {
   }, [])
 
   return (
-    <header className="border-b border-zinc-200 bg-white/85 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/85">
+    <header className="border-b border-washi-2 bg-washi/88 backdrop-blur">
       <Container className="flex flex-wrap items-center justify-between gap-4 py-3">
-        <Link
-          href="/"
-          className="text-lg font-semibold tracking-tight text-zinc-900 dark:text-zinc-50"
-        >
+        <Link href="/" className="text-lg font-semibold tracking-tight text-ink">
           TSUGITE
         </Link>
 
         {!ready ? (
           <span
-            className="h-9 min-w-[8rem] max-w-[10rem] flex-1 animate-pulse rounded bg-zinc-200 dark:bg-zinc-800"
+            className="h-9 min-w-[8rem] max-w-[10rem] flex-1 animate-pulse rounded bg-washi-2"
             aria-hidden
           />
         ) : (
-          <nav className="flex flex-wrap items-center justify-end gap-x-6 gap-y-2 text-sm text-zinc-700 dark:text-zinc-300">
-            <Link className="hover:text-zinc-950 dark:hover:text-white" href="/opportunities">
+          <nav className="flex flex-wrap items-center justify-end gap-x-6 gap-y-2 text-sm text-ink-3">
+            <Link className="hover:text-ink" href="/opportunities">
               募集
             </Link>
-            <Link className="hover:text-zinc-950 dark:hover:text-white" href="/demo/ryokan">
+            <Link className="hover:text-ink" href="/demo/ryokan">
               デモ
             </Link>
-            <Link className="hover:text-zinc-950 dark:hover:text-white" href="/app">
+            <Link className="hover:text-ink" href="/app">
               MVP
             </Link>
             {userId ? (
               <AuthenticatedNavLinks role={role} />
             ) : (
-              <Link className="hover:text-zinc-950 dark:hover:text-white" href="/login">
+              <Link className="hover:text-ink" href="/login">
                 ログイン
               </Link>
             )}
@@ -89,17 +86,17 @@ function AuthenticatedNavLinks({ role }: { role: UserRole | null }) {
   return (
     <>
       {role === 'shop' ? (
-        <Link className="hover:text-zinc-950 dark:hover:text-white" href="/shop">
+        <Link className="hover:text-ink" href="/shop">
           ダッシュボード（店）
         </Link>
       ) : null}
       {role === 'successor' ? (
-        <Link className="hover:text-zinc-950 dark:hover:text-white" href="/successor">
+        <Link className="hover:text-ink" href="/successor">
           ダッシュボード（継ぎ手）
         </Link>
       ) : null}
       {!role ? (
-        <Link className="hover:text-zinc-950 dark:hover:text-white" href="/onboarding/role">
+        <Link className="hover:text-ink" href="/onboarding/role">
           はじめる
         </Link>
       ) : null}
@@ -118,7 +115,7 @@ function SignOutControl() {
   return (
     <button
       type="button"
-      className="rounded-md border border-zinc-300 px-3 py-1.5 text-xs font-medium text-zinc-800 hover:bg-zinc-100 dark:border-zinc-600 dark:text-zinc-100 dark:hover:bg-zinc-800"
+      className="rounded-md border border-washi-3 px-3 py-1.5 text-xs font-medium text-ink hover:bg-washi-2"
       onClick={() => void signOut()}
     >
       ログアウト

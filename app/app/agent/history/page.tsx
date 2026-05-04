@@ -8,7 +8,7 @@ export default function AgentHistoryPage() {
       <PageHeader
         eyebrow="Agent history"
         title="会話履歴"
-        description="低優先度。MVPではチャット本体を優先し、履歴は保存イメージだけを表示。"
+        description="過去の相談履歴。Archiveタグを出典に返した回答を振り返れる。"
       />
       <section>
         <SectionTitle>最近の相談</SectionTitle>

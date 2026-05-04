@@ -9,7 +9,7 @@ export default async function GuideLogsPage() {
       <PageHeader
         eyebrow="Guide logs"
         title="観察ログ履歴"
-        description="MVPではライブ判定の説得力を補う履歴画面。時系列で改善が見えることを伝える。"
+        description="ライブ判定の記録。時系列で所作の改善が確認できる。"
       />
       <section>
         <SectionTitle>ログ</SectionTitle>

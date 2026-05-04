@@ -15,7 +15,7 @@ export default async function GuideLivePage({ params }: { params: Promise<{ id: 
       <PageHeader
         eyebrow="Live guide"
         title={`${scene.name} のライブ判定`}
-        description="登録済みの正解状態を使ってライブ判定する。実カメラ接続前でも、観察ログはSupabaseへ保存できる。"
+        description="カメラをかざすと AI が正解状態との差分をリアルタイムに判定し、フィードバックを音声で伝える。"
       />
       <LiveGuideDemo scene={scene} shopId={shopId} />
     </main>

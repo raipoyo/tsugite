@@ -7,10 +7,10 @@ export default function AccountSettingsPage() {
       <PageHeader
         eyebrow="Settings"
         title="アカウント設定"
-        description="低優先度。認証はSupabase Authへ接続済みだが、デモでは固定導線を優先する。"
+        description="ログイン情報やプロフィールを管理する。"
       />
       <Card className="p-6 text-sm leading-7 text-ink-3">
-        デモユーザー: owner@tsugite.local / role: shop
+        Supabase Auth で認証済み。プロフィール編集は今後対応予定。
       </Card>
     </main>
   )

@@ -38,6 +38,10 @@ yarn-error.log*
 # vercel
 .vercel
 
+# local service state
+.clerk/.tmp/
+supabase/.temp/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

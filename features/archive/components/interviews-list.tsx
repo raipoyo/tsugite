@@ -26,7 +26,7 @@ export default function InterviewsList({ interviews, onProcess }: InterviewsList
   if (interviews.length === 0) {
     return (
       <div className="text-center py-8 text-zinc-500 dark:text-zinc-400">
-        まだインタビュー動画がアップロードされていません。
+        まだインタビュー動画・音声がアップロードされていません。
       </div>
     )
   }

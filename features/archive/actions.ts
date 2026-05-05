@@ -3,6 +3,7 @@
 import { redirect } from 'next/navigation'
 
 import { createClient } from '@/lib/supabase/server'
+import { getInterviewFileExtension, isSupportedInterviewFile } from '@/features/archive/utils/media'
 
 export type UploadVideoState = {
   error?: string
@@ -43,13 +44,14 @@ export async function uploadVideo(
     return { error: 'no_shop' }
   }
 
-  const file = formData.get('video') as File
-  if (!file || file.size === 0) {
+  const fileEntry = formData.get('video')
+  if (!(fileEntry instanceof File) || fileEntry.size === 0) {
     return { error: 'no_file' }
   }
+  const file = fileEntry
 
   // Validate file type
-  if (!file.type.startsWith('video/')) {
+  if (!isSupportedInterviewFile(file)) {
     return { error: 'invalid_type' }
   }
 
@@ -74,7 +76,7 @@ export async function uploadVideo(
   }
 
   // Upload to Supabase Storage
-  const fileExt = file.name.split('.').pop() || 'mp4'
+  const fileExt = getInterviewFileExtension(file)
   const filePath = `${shop.id}/${interview.id}.${fileExt}`
 
   const { error: uploadError } = await supabase.storage

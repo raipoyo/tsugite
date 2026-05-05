@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Archive アップロードでMP3音声ファイルを受け付けるように変更。フォームの許可形式、Server Action の検証、文字起こしAPIへ渡すファイル名、詳細画面の音声再生表示を動画・音声両対応にした
 - **デザイン言語を全ページで washi/ink/shu トークンに統一**（マーケティング側が zinc ベースだった断絶を解消）
   - `features/marketing/site-header.tsx`: `zinc` クラスを washi/ink トークンに置換、`dark:` クラスを削除
   - `features/marketing/site-footer.tsx`: 同上

@@ -5,6 +5,7 @@ import { useActionState, useEffect, useState } from 'react'
 import Button from '@/components/ui/button'
 
 import { type UploadVideoState, uploadVideo } from '@/features/archive/actions'
+import { INTERVIEW_FILE_ACCEPT } from '@/features/archive/utils/media'
 
 type VideoUploadFormProps = {
   onSuccess?: (interviewId: string) => void
@@ -17,9 +18,9 @@ function errorMessage(code: UploadVideoState['error']): string | null {
     case 'no_shop':
       return '店舗情報が見つかりません。'
     case 'no_file':
-      return '動画ファイルを選択してください。'
+      return '動画またはMP3ファイルを選択してください。'
     case 'invalid_type':
-      return '動画ファイルのみアップロード可能です。'
+      return '動画またはMP3ファイルのみアップロード可能です。'
     case 'file_too_large':
       return 'ファイルサイズは100MB以下にしてください。'
     case 'upload_error':
@@ -52,13 +53,13 @@ export default function VideoUploadForm({ onSuccess }: VideoUploadFormProps) {
       ) : null}
       <div className="flex flex-col gap-2">
         <label htmlFor="video" className="text-sm font-medium text-zinc-800 dark:text-zinc-100">
-          インタビュー動画
+          インタビュー動画・音声
         </label>
         <input
           type="file"
           id="video"
           name="video"
-          accept="video/*"
+          accept={INTERVIEW_FILE_ACCEPT}
           required
           onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
           className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm outline-none ring-zinc-400 focus:ring-2 dark:border-zinc-700 dark:bg-zinc-900"
@@ -69,7 +70,7 @@ export default function VideoUploadForm({ onSuccess }: VideoUploadFormProps) {
           </p>
         )}
         <p className="text-xs text-zinc-500 dark:text-zinc-400">
-          対応形式: MP4, MOV, AVI など（最大100MB）
+          対応形式: MP4, MOV, AVI, MP3 など（最大100MB）
         </p>
       </div>
       <Button type="submit" disabled={!selectedFile}>

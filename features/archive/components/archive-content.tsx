@@ -59,7 +59,7 @@ export default function ArchiveContent({ interviews, tags }: ArchiveContentProps
             Archive - 暗黙知の蓄積
           </h1>
           <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-            インタビュー動画から、言語化されていない判断基準を抽出し、構造化して蓄積します。
+            インタビュー動画・音声から、言語化されていない判断基準を抽出し、構造化して蓄積します。
           </p>
         </div>
 
@@ -71,7 +71,7 @@ export default function ArchiveContent({ interviews, tags }: ArchiveContentProps
               content: (
                 <div className="max-w-2xl">
                   <h2 className="mb-4 text-xl font-semibold text-zinc-900 dark:text-zinc-100">
-                    新しいインタビュー動画をアップロード
+                    新しいインタビュー動画・音声をアップロード
                   </h2>
                   <VideoUploadForm onSuccess={() => window.location.reload()} />
                 </div>

@@ -12,6 +12,7 @@ const SHOP_NAV = [
   { href: '/shop/archive', label: 'Archive - 暗黙知' },
   { href: '/shop/guide', label: 'Guide (AI弟子)' },
   { href: '/shop/agent', label: 'Agent - AI相談' },
+  { href: '/shop/settings', label: '設定' },
 ] as const
 
 export default async function ShopSectionLayout({

@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- `features/agent/components/agent-chat.tsx`: `cn` のインポートが欠落していたため Vercel ビルドで TypeScript エラーが発生していた。`@/lib/cn` からのインポートを追加。
 - `features/agent/components/agent-chat.tsx`: `PageContainer` の `maxWidth` に存在しない値 `"3xl"` を使用していたため TypeScript ビルドエラーが発生していた。有効な値 `"2xl"` に修正。
 
 ### Added

@@ -121,7 +121,7 @@ archive.post('/extract/:interviewId', async (c) => {
 
     // Call GPT-4 for extraction
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4-turbo-preview',
+      model: 'gpt-4o',
       messages: [
         {
           role: 'system',
@@ -133,7 +133,10 @@ archive.post('/extract/:interviewId', async (c) => {
 - 「いつも〜している」「必ず〜する」などの習慣的行動
 - 特定の状況での対応方法とその背景にある価値観
 
-各タグは以下の形式で構造化してください：
+結果は必ず以下のJSON形式で返してください：
+{"tags": [{"situation": "...", "judgment": "...", "reason": "..."}]}
+
+各タグのフィールド：
 - situation: 具体的な状況や文脈（「〜のとき」「〜の場合」）
 - judgment: その状況でとる判断や行動
 - reason: なぜそうするのか、背景にある理由や価値観`,

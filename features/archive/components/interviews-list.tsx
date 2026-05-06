@@ -17,10 +17,13 @@ export default function InterviewsList({ interviews, onProcess }: InterviewsList
 
   const handleProcess = async (interviewId: string) => {
     setProcessingId(interviewId)
-    if (onProcess) {
-      await onProcess(interviewId)
+    try {
+      if (onProcess) {
+        await onProcess(interviewId)
+      }
+    } finally {
+      setProcessingId(null)
     }
-    setProcessingId(null)
   }
 
   if (interviews.length === 0) {

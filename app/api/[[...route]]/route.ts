@@ -19,6 +19,7 @@ import type { ChatCitation } from '@/types/agent'
 import archive from './archive'
 
 export const runtime = 'nodejs'
+export const maxDuration = 300 // 5 min – needed for Whisper transcription of large files
 
 const app = new Hono().basePath('/api')
 

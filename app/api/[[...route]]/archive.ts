@@ -43,12 +43,31 @@ archive.post('/transcribe/:interviewId', async (c) => {
       .download(interview.storage_path)
 
     if (downloadError || !fileData) {
-      return c.json({ error: 'Failed to download interview media' }, 500)
+      console.error('Storage download error:', downloadError)
+      return c.json(
+        { error: `Failed to download interview media: ${downloadError?.message ?? 'unknown'}` },
+        500,
+      )
     }
+
+    // Whisper API limit is 25 MB
+    const WHISPER_MAX_BYTES = 25 * 1024 * 1024
+    if (fileData.size > WHISPER_MAX_BYTES) {
+      return c.json(
+        {
+          error: `File too large for transcription (${(fileData.size / 1024 / 1024).toFixed(1)} MB). Maximum is 25 MB. Please upload an MP3 audio file instead.`,
+        },
+        422,
+      )
+    }
+
+    console.log(
+      `[transcribe] interviewId=${interviewId} size=${fileData.size} type=${fileData.type} path=${interview.storage_path}`,
+    )
 
     // Convert Blob to File for OpenAI API
     const file = new File([fileData], getStorageFileName(interview.storage_path), {
-      type: fileData.type,
+      type: fileData.type || 'audio/mpeg',
     })
 
     // Call Whisper API
@@ -65,7 +84,8 @@ archive.post('/transcribe/:interviewId', async (c) => {
       .eq('id', interviewId)
 
     if (updateError) {
-      return c.json({ error: 'Failed to save transcript' }, 500)
+      console.error('DB update error:', updateError)
+      return c.json({ error: `Failed to save transcript: ${updateError.message}` }, 500)
     }
 
     return c.json({
@@ -74,7 +94,10 @@ archive.post('/transcribe/:interviewId', async (c) => {
     })
   } catch (error) {
     console.error('Transcription error:', error)
-    return c.json({ error: 'Transcription failed' }, 500)
+    return c.json(
+      { error: `Transcription failed: ${error instanceof Error ? error.message : String(error)}` },
+      500,
+    )
   }
 })
 
@@ -121,7 +144,7 @@ archive.post('/extract/:interviewId', async (c) => {
 
     // Call GPT-4 for extraction
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4-turbo-preview',
+      model: 'gpt-4o',
       messages: [
         {
           role: 'system',
@@ -133,7 +156,10 @@ archive.post('/extract/:interviewId', async (c) => {
 - 「いつも〜している」「必ず〜する」などの習慣的行動
 - 特定の状況での対応方法とその背景にある価値観
 
-各タグは以下の形式で構造化してください：
+結果は必ず以下のJSON形式で返してください：
+{"tags": [{"situation": "...", "judgment": "...", "reason": "..."}]}
+
+各タグのフィールド：
 - situation: 具体的な状況や文脈（「〜のとき」「〜の場合」）
 - judgment: その状況でとる判断や行動
 - reason: なぜそうするのか、背景にある理由や価値観`,
@@ -170,7 +196,8 @@ archive.post('/extract/:interviewId', async (c) => {
       .select()
 
     if (insertError) {
-      return c.json({ error: 'Failed to save tags' }, 500)
+      console.error('DB insert error:', insertError)
+      return c.json({ error: `Failed to save tags: ${insertError.message}` }, 500)
     }
 
     return c.json({
@@ -179,7 +206,10 @@ archive.post('/extract/:interviewId', async (c) => {
     })
   } catch (error) {
     console.error('Extraction error:', error)
-    return c.json({ error: 'Extraction failed' }, 500)
+    return c.json(
+      { error: `Extraction failed: ${error instanceof Error ? error.message : String(error)}` },
+      500,
+    )
   }
 })
 
@@ -230,7 +260,8 @@ archive.post('/embed/:tagId', async (c) => {
     })
 
     if (insertError) {
-      return c.json({ error: 'Failed to save embedding' }, 500)
+      console.error('Embedding insert error:', insertError)
+      return c.json({ error: `Failed to save embedding: ${insertError.message}` }, 500)
     }
 
     return c.json({
@@ -238,7 +269,12 @@ archive.post('/embed/:tagId', async (c) => {
     })
   } catch (error) {
     console.error('Embedding error:', error)
-    return c.json({ error: 'Embedding generation failed' }, 500)
+    return c.json(
+      {
+        error: `Embedding generation failed: ${error instanceof Error ? error.message : String(error)}`,
+      },
+      500,
+    )
   }
 })
 

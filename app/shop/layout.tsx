@@ -7,8 +7,6 @@ import { parseUserRole } from '@/lib/roles'
 const SHOP_NAV = [
   { href: '/shop', label: '概要' },
   { href: '/shop/profile', label: 'プロフィール' },
-  { href: '/shop/listings', label: '募集管理' },
-  { href: '/shop/applications', label: '応募' },
   { href: '/shop/archive', label: 'Archive - 暗黙知' },
   { href: '/shop/guide', label: 'Guide (AI弟子)' },
   { href: '/shop/agent', label: 'Agent - AI相談' },

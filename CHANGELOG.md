@@ -19,6 +19,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- `app/shop/settings/` および `app/successor/settings/`: ロール別設定セクションを新設
+  - `shop/settings/shop/page.tsx`: 既存の `ShopProfileForm` を再利用し、現在の `shop_profile` を初期値としてプリフィルする店舗情報編集ページ
+  - `shop/settings/members/page.tsx`: メンバー管理プレースホルダー（近日公開予定）
+  - `shop/settings/account/page.tsx`: アカウント設定プレースホルダー（近日公開予定）
+  - `successor/settings/profile/page.tsx`: 既存の `SuccessorProfileForm` を再利用し、現在の `successor_profile` を初期値としてプリフィルするプロフィール編集ページ
+  - `successor/settings/account/page.tsx`: アカウント設定プレースホルダー（近日公開予定）
+- `features/settings/settings-tab-nav.tsx`: 設定画面内のタブナビゲーション用クライアントコンポーネントを新設。`role` prop で shop（朱色）/ successor（藍）のアクティブ色を切り替え
+- `app/shop/layout.tsx` / `app/successor/layout.tsx`: ダッシュボードサイドナビに「設定」リンクを追加
+
 - `app/shop/archive/[id]/page.tsx`: インタビュー詳細ページを新設。動画・音声プレイヤー、処理状態バッジ、文字起こしテキスト、暗黙知タグ一覧を表示
 - `app/shop/archive/[id]/_components/transcribe-button.tsx`: 文字起こし→暗黙知抽出→embedding の pipeline をクライアントで実行するボタンコンポーネントを新設。成功後に `router.refresh()` でページを更新
 - `app/shop/agent/page.tsx`: 店側向け Agent ページを新設。実際の `shopId` を DB から取得して `AgentChat` に渡す

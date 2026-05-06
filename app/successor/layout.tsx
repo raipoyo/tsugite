@@ -10,6 +10,7 @@ const SUCCESSOR_NAV = [
   { href: '/successor/applications', label: '応募一覧' },
   { href: '/successor/archive', label: 'Archive閲覧' },
   { href: '/successor/agent', label: 'Agent - 先代に相談' },
+  { href: '/successor/settings', label: '設定' },
 ] as const
 
 export default async function SuccessorSectionLayout({

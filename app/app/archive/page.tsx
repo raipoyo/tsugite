@@ -9,7 +9,7 @@ export default async function ArchivePage() {
     <main className="space-y-8">
       <PageHeader
         eyebrow="Archive"
-        title="インタビュー動画一覧"
+        title="インタビュー素材一覧"
         description="店主の語りから、継承に必要な判断基準を抽出する。"
         actions={
           <>
@@ -17,14 +17,14 @@ export default async function ArchivePage() {
               最新動画を見る
             </LinkButton>
             <LinkButton href="/app/archive/upload" variant="secondary">
-              動画アップロード
+              動画・音声アップロード
             </LinkButton>
           </>
         }
       />
       <section>
         <SectionTitle note={isReal ? 'Supabase interviews' : 'Whisper -> タグ抽出 -> RAG材料化'}>
-          動画
+          素材
         </SectionTitle>
         <div className="space-y-4">
           {interviews.map((interview) => (

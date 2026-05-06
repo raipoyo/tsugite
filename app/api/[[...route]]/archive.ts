@@ -3,10 +3,11 @@ import { z } from 'zod'
 
 import { createClient } from '@/lib/supabase/server'
 import { openai } from '@/lib/openai'
+import { getStorageFileName } from '@/features/archive/utils/media'
 
 const archive = new Hono()
 
-// Transcribe interview video using Whisper API
+// Transcribe interview media using Whisper API
 archive.post('/transcribe/:interviewId', async (c) => {
   const interviewId = c.req.param('interviewId')
 
@@ -36,17 +37,19 @@ archive.post('/transcribe/:interviewId', async (c) => {
   }
 
   try {
-    // Download video from Supabase Storage
+    // Download media from Supabase Storage
     const { data: fileData, error: downloadError } = await supabase.storage
       .from('interview-videos')
       .download(interview.storage_path)
 
     if (downloadError || !fileData) {
-      return c.json({ error: 'Failed to download video' }, 500)
+      return c.json({ error: 'Failed to download interview media' }, 500)
     }
 
     // Convert Blob to File for OpenAI API
-    const file = new File([fileData], 'video.mp4', { type: fileData.type })
+    const file = new File([fileData], getStorageFileName(interview.storage_path), {
+      type: fileData.type,
+    })
 
     // Call Whisper API
     const transcription = await openai.audio.transcriptions.create({

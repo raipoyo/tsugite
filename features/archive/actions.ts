@@ -1,102 +1,156 @@
 'use server'
 
-import { redirect } from 'next/navigation'
-
 import { createClient } from '@/lib/supabase/server'
+import { ensureShopForProfile } from '@/lib/shops'
+import {
+  getFileExtension,
+  getInterviewFileExtension,
+  INTERVIEW_STORAGE_BUCKET,
+  isSupportedInterviewFile,
+  MAX_INTERVIEW_FILE_SIZE,
+} from '@/features/archive/utils/media'
+
+type UploadVideoError =
+  | 'not_authenticated'
+  | 'role_mismatch'
+  | 'no_shop'
+  | 'no_file'
+  | 'invalid_type'
+  | 'file_too_large'
+  | 'upload_error'
+  | 'invalid_upload'
+  | 'db_error'
 
 export type UploadVideoState = {
-  error?: string
+  error?: UploadVideoError
   interviewId?: string
+  storagePath?: string
+  token?: string
 }
 
-export async function uploadVideo(
-  prev: UploadVideoState,
-  formData: FormData,
-): Promise<UploadVideoState> {
-  void prev
+type CreateInterviewUploadInput = {
+  fileName: string
+  fileSize: number
+  fileType: string
+}
+
+type CompleteInterviewUploadInput = {
+  interviewId: string
+  storagePath: string
+}
+
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+
+async function getCurrentShop() {
   const supabase = await createClient()
 
-  // Get authenticated user
   const {
     data: { user },
   } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+  if (!user) return { error: 'not_authenticated' as const, shop: null, supabase }
 
-  // Get shop ID for this user
   const { data: profile } = await supabase
     .from('profiles')
-    .select('role')
+    .select('shop_profile')
     .eq('id', user.id)
     .maybeSingle()
 
-  if (!profile || profile.role !== 'shop') {
-    return { error: 'role_mismatch' }
+  const shop = await ensureShopForProfile(supabase, user.id, profile?.shop_profile)
+  if (!shop) return { error: 'no_shop' as const, shop: null, supabase }
+
+  return { error: null, shop, supabase }
+}
+
+function validateUploadInput(input: CreateInterviewUploadInput): UploadVideoError | null {
+  if (!input.fileName || !Number.isFinite(input.fileSize) || input.fileSize <= 0) {
+    return 'no_file'
   }
 
-  const { data: shop } = await supabase
-    .from('shops')
-    .select('id')
-    .eq('owner_profile_id', user.id)
-    .maybeSingle()
-
-  if (!shop) {
-    return { error: 'no_shop' }
+  const file = { name: input.fileName, type: input.fileType }
+  if (!isSupportedInterviewFile(file)) {
+    return 'invalid_type'
   }
 
-  const file = formData.get('video') as File
-  if (!file || file.size === 0) {
-    return { error: 'no_file' }
+  if (input.fileSize > MAX_INTERVIEW_FILE_SIZE) {
+    return 'file_too_large'
   }
 
-  // Validate file type
-  if (!file.type.startsWith('video/')) {
-    return { error: 'invalid_type' }
-  }
+  return null
+}
 
-  // Validate file size (max 100MB)
-  const MAX_SIZE = 100 * 1024 * 1024
-  if (file.size > MAX_SIZE) {
-    return { error: 'file_too_large' }
-  }
+function isExpectedStoragePath(storagePath: string, shopId: string, interviewId: string): boolean {
+  if (!UUID_PATTERN.test(interviewId)) return false
 
-  // Create interview record first
-  const { data: interview, error: insertError } = await supabase
-    .from('interviews')
-    .insert({
-      shop_id: shop.id,
-      storage_path: '', // Will be updated after upload
-    })
-    .select()
-    .single()
+  const expectedPrefix = `${shopId}/${interviewId}.`
+  if (!storagePath.startsWith(expectedPrefix)) return false
 
-  if (insertError || !interview) {
-    return { error: 'db_error' }
-  }
+  const extension = getFileExtension(storagePath)
+  return (
+    Boolean(extension) &&
+    !storagePath.slice(expectedPrefix.length).includes('/') &&
+    isSupportedInterviewFile({ name: storagePath, type: '' })
+  )
+}
 
-  // Upload to Supabase Storage
-  const fileExt = file.name.split('.').pop() || 'mp4'
-  const filePath = `${shop.id}/${interview.id}.${fileExt}`
+export async function createInterviewUpload(
+  input: CreateInterviewUploadInput,
+): Promise<UploadVideoState> {
+  const inputError = validateUploadInput(input)
+  if (inputError) return { error: inputError }
 
-  const { error: uploadError } = await supabase.storage
-    .from('interview-videos')
-    .upload(filePath, file, {
-      cacheControl: '3600',
-      upsert: false,
-    })
+  const { error, shop, supabase } = await getCurrentShop()
+  if (error) return { error }
+  if (!shop) return { error: 'no_shop' }
 
-  if (uploadError) {
-    // Clean up interview record if upload failed
-    await supabase.from('interviews').delete().eq('id', interview.id)
+  const interviewId = crypto.randomUUID()
+  const fileExt = getInterviewFileExtension({ name: input.fileName, type: input.fileType })
+  const storagePath = `${shop.id}/${interviewId}.${fileExt}`
+
+  const { data, error: signedUrlError } = await supabase.storage
+    .from(INTERVIEW_STORAGE_BUCKET)
+    .createSignedUploadUrl(storagePath, { upsert: false })
+
+  if (signedUrlError || !data?.token) {
     return { error: 'upload_error' }
   }
 
-  // Update interview with storage path
-  const { error: updateError } = await supabase
-    .from('interviews')
-    .update({ storage_path: filePath })
-    .eq('id', interview.id)
+  return {
+    interviewId,
+    storagePath,
+    token: data.token,
+  }
+}
 
-  if (updateError) {
+export async function completeInterviewUpload(
+  input: CompleteInterviewUploadInput,
+): Promise<UploadVideoState> {
+  const { error, shop, supabase } = await getCurrentShop()
+  if (error) return { error }
+  if (!shop) return { error: 'no_shop' }
+
+  if (!isExpectedStoragePath(input.storagePath, shop.id, input.interviewId)) {
+    return { error: 'invalid_upload' }
+  }
+
+  const { data: objectInfo, error: objectInfoError } = await supabase.storage
+    .from(INTERVIEW_STORAGE_BUCKET)
+    .info(input.storagePath)
+
+  if (objectInfoError || !objectInfo) {
+    return { error: 'upload_error' }
+  }
+
+  const { data: interview, error: insertError } = await supabase
+    .from('interviews')
+    .insert({
+      id: input.interviewId,
+      shop_id: shop.id,
+      storage_path: input.storagePath,
+    })
+    .select('id')
+    .single()
+
+  if (insertError || !interview) {
     return { error: 'db_error' }
   }
 

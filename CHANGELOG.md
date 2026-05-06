@@ -8,8 +8,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Archive アップロードで音声ファイル（MP3）をアップロードすると `403 new row violates row-level security policy` で失敗する問題を修正。`storage.objects` の INSERT RLS ポリシーが `public.shops` をサブクエリで直接参照していたため、storage の RLS 評価コンテキストと shops 側の RLS（`to authenticated`）が競合しサブクエリが空を返していた。`SECURITY DEFINER` 関数 `storage.is_interview_path_owner()` を追加し、SELECT/INSERT/DELETE の各ポリシーをこの関数経由に切り替えることで修正（migration: `20260506120000_fix_storage_rls_cross_schema`）
+
+### Added
+
+- コードから逆算した現状要件定義書 `docs/current-requirements.md` を追加。認証、ロール、Archive、Guide、Agent、DB/API、モック範囲、未決事項を整理
+
 ### Changed
 
+- Archive アップロードを Server Action 経由のファイル送信から Supabase Storage 署名アップロードへ変更。音声・動画ファイル本体をブラウザから直接 Storage に送ることで、Next.js Server Action の 1MB body 制限を回避
+- Archive アップロードでMP3音声ファイルを受け付けるように変更。フォームの許可形式、Server Action の検証、文字起こしAPIへ渡すファイル名、詳細画面の音声再生表示を動画・音声両対応にした
 - **デザイン言語を全ページで washi/ink/shu トークンに統一**（マーケティング側が zinc ベースだった断絶を解消）
   - `features/marketing/site-header.tsx`: `zinc` クラスを washi/ink トークンに置換、`dark:` クラスを削除
   - `features/marketing/site-footer.tsx`: 同上

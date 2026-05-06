@@ -195,7 +195,7 @@ export async function getAppData(): Promise<AppData> {
       date: new Date(interview.created_at).toISOString().slice(0, 10),
       excerpt:
         interview.transcript?.slice(0, 96) ??
-        '文字起こし待ち。動画を処理すると暗黙知タグへ変換できる。',
+        '文字起こし待ち。素材を処理すると暗黙知タグへ変換できる。',
       storagePath: interview.storage_path,
       transcript: interview.transcript,
     }

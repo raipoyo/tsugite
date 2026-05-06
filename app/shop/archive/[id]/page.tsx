@@ -4,7 +4,6 @@ import { notFound, redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { ensureShopForProfile } from '@/lib/shops'
 import { isAudioStoragePath } from '@/features/archive/utils/media'
-import { getSignedInterviewUrl } from '@/features/hackathon/real-data'
 import type { TacitTag } from '@/features/archive/types'
 import TranscribeButton from './_components/transcribe-button'
 
@@ -57,7 +56,10 @@ export default async function ShopArchiveDetailPage({
     createdAt: new Date(row.created_at),
   }))
 
-  const mediaUrl = await getSignedInterviewUrl(interview.storage_path)
+  const { data: signedData } = await supabase.storage
+    .from('interview-videos')
+    .createSignedUrl(interview.storage_path, 60 * 10)
+  const mediaUrl = signedData?.signedUrl ?? null
   const isAudio = isAudioStoragePath(interview.storage_path)
 
   return (

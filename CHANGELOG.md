@@ -10,6 +10,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- `features/dashboard/dashboard-user-nav.tsx`: サイドバー最下部のアカウント情報ボックスを新設
+  - ユーザー名、メールアドレス、プロフィールアイコン（頭文字）を表示
+  - クリックでプロフィール編集、設定、ログアウトのメニューを展開
+- `lucide-react`: アイコンライブラリを追加
+
+### Changed
+
+- **ダッシュボード UI の刷新**:
+  - `features/dashboard/dashboard-side-nav.tsx`: 従来のヘッダーメニュー型から、モダンなサイドバーレイアウトに変更。プロフィールと設定のリンクをメインメニューから削除し、下部のアカウントボックスに集約
+  - `app/shop/layout.tsx` / `app/successor/layout.tsx`: メインナビゲーションを整理し、サイドバーにユーザー情報を表示するよう更新
+  - サイドバー幅を `md:w-52` から `md:w-64` に拡張し、情報密度を最適化
+  - デスクトップ表示時にサイドバーを `sticky` にし、スクロールしてもナビゲーションが固定されるよう改善
+  - ユーザーナビのホバー表現を微調整
+  - **ダッシュボード概要ページの充実**: `app/shop/page.tsx` および `app/successor/page.tsx` に、統計情報やクイックアクセスカードを追加し、ダッシュボードとしての機能性と視認性を大幅に向上
+
+### Added
+
 - `components/layout/`: 共通レイアウトコンポーネントを新設
   - `PageContainer`: 画面の最大幅とパディングを一括管理
   - `PageHeader`: ページタイトル、説明文、アクションエリアを標準化

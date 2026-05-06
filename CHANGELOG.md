@@ -10,6 +10,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- `app/shop/archive/[id]/page.tsx`: `getSignedInterviewUrl` を `features/hackathon/real-data` から直接 Supabase Storage の `createSignedUrl` 呼び出しにインライン化。hackathon モジュール依存を除去
+- `app/successor/archive/page.tsx`: `getAppData` (hackathon) を除去し、アプリケーション機能の実装まで「近日公開予定」プレースホルダーに置き換え（元々 successor では常に fallback mock データを返していた）
+
+### Removed
+
+- `features/hackathon/`: ハッカソン用デモコード（`mvp-ui.tsx`、`mvp-data.ts`、`real-data.ts`、`agent-demo-chat.tsx`、`archive-upload-card.tsx`、`live-guide-demo.tsx`）を完全削除。本番ルートからの全 import を除去したことを確認済み
+
 - `interviews-list.tsx`: `onProcess` が例外を投げた場合に `setProcessingId(null)` が呼ばれず、処理ボタンが「処理中...」のまま固まるバグを `try/finally` で修正
 - `archive-content.tsx`: `fetch()` 自体が例外を投げた場合（ネットワークエラー等）を `try/catch` で補足し、エラー内容を `alert()` で表示するよう修正。エラーアラートにステータスコードと実際のエラーメッセージを含めるよう改善
 - `archive.ts`: Whisper API の 25MB ファイルサイズ制限を事前チェックし、超過時に 422 と分かりやすいエラーメッセージを返すよう追加。ストレージダウンロード・DB更新・Whisper呼び出し各フェーズのエラーメッセージを詳細化

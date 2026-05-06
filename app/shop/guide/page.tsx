@@ -27,7 +27,7 @@ export default async function GuidePage() {
   const shop = await ensureShopForProfile(supabase, user.id, profile.shop_profile)
 
   if (!shop) {
-    redirect('/register/shop')
+    redirect('/onboarding/shop')
   }
 
   // Get reference scenes

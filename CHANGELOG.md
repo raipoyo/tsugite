@@ -10,6 +10,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- `app/shop/archive/[id]/page.tsx`: `getSignedInterviewUrl` を `features/hackathon/real-data` から直接 Supabase Storage の `createSignedUrl` 呼び出しにインライン化。hackathon モジュール依存を除去
+- `app/successor/archive/page.tsx`: `getAppData` (hackathon) を除去し、アプリケーション機能の実装まで「近日公開予定」プレースホルダーに置き換え（元々 successor では常に fallback mock データを返していた）
+
+### Removed
+
+- `features/hackathon/`: ハッカソン用デモコード（`mvp-ui.tsx`、`mvp-data.ts`、`real-data.ts`、`agent-demo-chat.tsx`、`archive-upload-card.tsx`、`live-guide-demo.tsx`）を完全削除。本番ルートからの全 import を除去したことを確認済み
+
 - `interviews-list.tsx`: `onProcess` が例外を投げた場合に `setProcessingId(null)` が呼ばれず、処理ボタンが「処理中...」のまま固まるバグを `try/finally` で修正
 - `archive-content.tsx`: `fetch()` 自体が例外を投げた場合（ネットワークエラー等）を `try/catch` で補足し、エラー内容を `alert()` で表示するよう修正。エラーアラートにステータスコードと実際のエラーメッセージを含めるよう改善
 - `archive.ts`: Whisper API の 25MB ファイルサイズ制限を事前チェックし、超過時に 422 と分かりやすいエラーメッセージを返すよう追加。ストレージダウンロード・DB更新・Whisper呼び出し各フェーズのエラーメッセージを詳細化
@@ -18,6 +25,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Archive アップロードで音声ファイル（MP3）をアップロードすると `403 new row violates row-level security policy` で失敗する問題を修正。`storage.objects` の INSERT RLS ポリシーが `public.shops` をサブクエリで直接参照していたため、storage の RLS 評価コンテキストと shops 側の RLS（`to authenticated`）が競合しサブクエリが空を返していた。`SECURITY DEFINER` 関数 `storage.is_interview_path_owner()` を追加し、SELECT/INSERT/DELETE の各ポリシーをこの関数経由に切り替えることで修正（migration: `20260506120000_fix_storage_rls_cross_schema`）
 
 ### Added
+
+- `app/shop/settings/` および `app/successor/settings/`: ロール別設定セクションを新設
+  - `shop/settings/shop/page.tsx`: 既存の `ShopProfileForm` を再利用し、現在の `shop_profile` を初期値としてプリフィルする店舗情報編集ページ
+  - `shop/settings/members/page.tsx`: メンバー管理プレースホルダー（近日公開予定）
+  - `shop/settings/account/page.tsx`: アカウント設定プレースホルダー（近日公開予定）
+  - `successor/settings/profile/page.tsx`: 既存の `SuccessorProfileForm` を再利用し、現在の `successor_profile` を初期値としてプリフィルするプロフィール編集ページ
+  - `successor/settings/account/page.tsx`: アカウント設定プレースホルダー（近日公開予定）
+- `features/settings/settings-tab-nav.tsx`: 設定画面内のタブナビゲーション用クライアントコンポーネントを新設。`role` prop で shop（朱色）/ successor（藍）のアクティブ色を切り替え
+- `app/shop/layout.tsx` / `app/successor/layout.tsx`: ダッシュボードサイドナビに「設定」リンクを追加
 
 - `app/shop/archive/[id]/page.tsx`: インタビュー詳細ページを新設。動画・音声プレイヤー、処理状態バッジ、文字起こしテキスト、暗黙知タグ一覧を表示
 - `app/shop/archive/[id]/_components/transcribe-button.tsx`: 文字起こし→暗黙知抽出→embedding の pipeline をクライアントで実行するボタンコンポーネントを新設。成功後に `router.refresh()` でページを更新

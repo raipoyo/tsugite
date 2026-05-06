@@ -65,9 +65,6 @@ export default function SiteHeader() {
             <Link className="hover:text-ink" href="/demo/ryokan">
               デモ
             </Link>
-            <Link className="hover:text-ink" href="/app">
-              MVP
-            </Link>
             {userId ? (
               <AuthenticatedNavLinks role={role} />
             ) : (

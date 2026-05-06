@@ -10,14 +10,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- `interviews-list.tsx`: `onProcess` が例外を投げた場合に `setProcessingId(null)` が呼ばれず、処理ボタンが「処理中...」のまま固まるバグを `try/finally` で修正
+- `archive-content.tsx`: `fetch()` 自体が例外を投げた場合（ネットワークエラー等）を `try/catch` で補足し、エラー内容を `alert()` で表示するよう修正。エラーアラートにステータスコードと実際のエラーメッセージを含めるよう改善
+- `archive.ts`: Whisper API の 25MB ファイルサイズ制限を事前チェックし、超過時に 422 と分かりやすいエラーメッセージを返すよう追加。ストレージダウンロード・DB更新・Whisper呼び出し各フェーズのエラーメッセージを詳細化
+- `route.ts`: `maxDuration = 300`（5分）を追加。MP4動画の文字起こしは時間がかかるため、Vercel本番でのタイムアウトを防ぐ
 - Archive の暗黙知タグ抽出で `gpt-4o` を使用し、レスポンス形式を明示的な JSON に固定することでタグ解析の安定性を改善
 - Archive アップロードで音声ファイル（MP3）をアップロードすると `403 new row violates row-level security policy` で失敗する問題を修正。`storage.objects` の INSERT RLS ポリシーが `public.shops` をサブクエリで直接参照していたため、storage の RLS 評価コンテキストと shops 側の RLS（`to authenticated`）が競合しサブクエリが空を返していた。`SECURITY DEFINER` 関数 `storage.is_interview_path_owner()` を追加し、SELECT/INSERT/DELETE の各ポリシーをこの関数経由に切り替えることで修正（migration: `20260506120000_fix_storage_rls_cross_schema`）
 
 ### Added
 
+- `app/shop/archive/[id]/page.tsx`: インタビュー詳細ページを新設。動画・音声プレイヤー、処理状態バッジ、文字起こしテキスト、暗黙知タグ一覧を表示
+- `app/shop/archive/[id]/_components/transcribe-button.tsx`: 文字起こし→暗黙知抽出→embedding の pipeline をクライアントで実行するボタンコンポーネントを新設。成功後に `router.refresh()` でページを更新
+- `app/shop/agent/page.tsx`: 店側向け Agent ページを新設。実際の `shopId` を DB から取得して `AgentChat` に渡す
+- `app/successor/archive/page.tsx`: 継ぎ手向け Archive 閲覧ページを新設（読み取り専用・モックデータ）
 - コードから逆算した現状要件定義書 `docs/current-requirements.md` を追加。認証、ロール、Archive、Guide、Agent、DB/API、モック範囲、未決事項を整理
 
 ### Changed
+
+- `features/dashboard/dashboard-side-nav.tsx`: `role?: 'shop' | 'successor'` prop を追加。shop は shu（朱色）、successor は ink-3（藍）でアクティブ色とタイトル色を切り替えることで、役割を視覚的に区別
+- `app/shop/layout.tsx`: `SHOP_NAV` に `{ href: '/shop/agent', label: 'Agent - AI相談' }` を追加。`DashboardSideNav` に `role="shop"` を渡す
+- `app/successor/layout.tsx`: `SUCCESSOR_NAV` に Archive閲覧・Agent の2項目を追加。`DashboardSideNav` に `role="successor"` を渡す
+- `features/hackathon/archive-upload-card.tsx`: アップロード成功後のリダイレクト先を `/app/archive/${id}` から `/shop/archive/${id}` に変更。文字起こしボタンが存在しない `/app/*` ルートへの流入を解消
 
 - Archive アップロードを Server Action 経由のファイル送信から Supabase Storage 署名アップロードへ変更。音声・動画ファイル本体をブラウザから直接 Storage に送ることで、Next.js Server Action の 1MB body 制限を回避
 - Archive アップロードでMP3音声ファイルを受け付けるように変更。フォームの許可形式、Server Action の検証、文字起こしAPIへ渡すファイル名、詳細画面の音声再生表示を動画・音声両対応にした

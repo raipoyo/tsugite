@@ -8,6 +8,8 @@ const SUCCESSOR_NAV = [
   { href: '/successor', label: '概要' },
   { href: '/successor/profile', label: 'プロフィール' },
   { href: '/successor/applications', label: '応募一覧' },
+  { href: '/successor/archive', label: 'Archive閲覧' },
+  { href: '/successor/agent', label: 'Agent - 先代に相談' },
 ] as const
 
 export default async function SuccessorSectionLayout({
@@ -22,7 +24,7 @@ export default async function SuccessorSectionLayout({
 
   return (
     <div className="flex min-h-[60vh] flex-1 flex-col md:flex-row">
-      <DashboardSideNav title="継ぎ手向けメニュー" items={[...SUCCESSOR_NAV]} />
+      <DashboardSideNav title="継ぎ手向けメニュー" items={[...SUCCESSOR_NAV]} role="successor" />
       <div className="flex flex-1 flex-col">{children}</div>
     </div>
   )

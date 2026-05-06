@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- `features/guide/utils/vision.ts`: Vision 画像認識を Google Gemini (`gemini-2.0-flash-exp`) から OpenAI (`gpt-4o`) に置き換え。API を OpenAI に統一し、`@google/generative-ai` への依存を解消
+  - `@google/generative-ai` パッケージを `package.json` から削除
+  - 既存の `analyzeSceneWithVision` の入出力インターフェースは変更なし（既存の呼び出し元に影響なし）
+
 ### Fixed
 
 - `proxy.ts` を `middleware.ts` にリネームし `export default` に変更。ファイル名・エクスポート形式が誤っていたため Next.js にミドルウェアとして認識されず、セッションリフレッシュと保護ルートの未認証リダイレクトが一切動いていなかった

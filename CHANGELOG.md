@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- `features/agent/components/agent-chat.tsx`: `PageContainer` の `maxWidth` に存在しない値 `"3xl"` を使用していたため TypeScript ビルドエラーが発生していた。有効な値 `"2xl"` に修正。
+
 ### Added
 
 - `features/dashboard/dashboard-user-nav.tsx`: サイドバー最下部のアカウント情報ボックスを新設

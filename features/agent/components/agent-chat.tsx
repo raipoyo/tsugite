@@ -96,7 +96,7 @@ export default function AgentChat({ shopId }: AgentChatProps) {
 
       {/* Messages area */}
       <div className="flex-1 overflow-y-auto">
-        <PageContainer maxWidth="3xl" className="py-8 space-y-6">
+        <PageContainer maxWidth="2xl" className="py-8 space-y-6">
           {messages.length === 0 && (
             <div className="flex flex-col items-center justify-center text-center py-12">
               <div className="h-16 w-16 rounded-full bg-shu/10 flex items-center justify-center mb-6">
@@ -106,14 +106,16 @@ export default function AgentChat({ shopId }: AgentChatProps) {
               <p className="text-sm text-ink-3 max-w-sm mb-8">
                 困ったことや判断に迷うことがあれば、お気軽にご質問ください。
               </p>
-              
+
               <div className="w-full space-y-3">
-                <p className="text-xs font-bold text-ink-4 uppercase tracking-widest text-left ml-1">よくある質問</p>
+                <p className="text-xs font-bold text-ink-4 uppercase tracking-widest text-left ml-1">
+                  よくある質問
+                </p>
                 <div className="grid grid-cols-1 gap-2">
                   {[
                     '常連の田中様が来られた時の対応は？',
                     '季節の挨拶で気をつけることは？',
-                    'お茶の温度はどのくらいが適切？'
+                    'お茶の温度はどのくらいが適切？',
                   ].map((q) => (
                     <button
                       key={q}
@@ -133,12 +135,14 @@ export default function AgentChat({ shopId }: AgentChatProps) {
               key={message.id}
               className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
             >
-              <div className={cn(
-                "max-w-[85%] rounded-2xl p-4 shadow-sm",
-                message.role === 'user' 
-                  ? "bg-shu text-white rounded-tr-none" 
-                  : "bg-white text-ink border border-washi-3 rounded-tl-none"
-              )}>
+              <div
+                className={cn(
+                  'max-w-[85%] rounded-2xl p-4 shadow-sm',
+                  message.role === 'user'
+                    ? 'bg-shu text-white rounded-tr-none'
+                    : 'bg-white text-ink border border-washi-3 rounded-tl-none',
+                )}
+              >
                 <div className="whitespace-pre-wrap text-sm leading-relaxed">
                   {message.parts.map((part, index) =>
                     part.type === 'text' ? <span key={index}>{part.text}</span> : null,
@@ -159,7 +163,9 @@ export default function AgentChat({ shopId }: AgentChatProps) {
                             <span className="h-1 w-1 bg-shu animate-bounce [animation-delay:0.2s]"></span>
                             再生中...
                           </span>
-                        ) : '🔊 音声で聞く'}
+                        ) : (
+                          '🔊 音声で聞く'
+                        )}
                       </button>
                     </div>
                   )}
@@ -202,7 +208,7 @@ export default function AgentChat({ shopId }: AgentChatProps) {
               </div>
             </div>
           )}
-          
+
           <div ref={messagesEndRef} className="h-4" />
         </PageContainer>
       </div>
@@ -215,7 +221,7 @@ export default function AgentChat({ shopId }: AgentChatProps) {
 
       {/* Input area */}
       <div className="bg-washi-2/80 backdrop-blur-md border-t border-washi-3 pb-6">
-        <PageContainer maxWidth="3xl" className="py-4">
+        <PageContainer maxWidth="2xl" className="py-4">
           <form
             onSubmit={(event) => {
               event.preventDefault()
@@ -242,17 +248,15 @@ export default function AgentChat({ shopId }: AgentChatProps) {
               }}
               disabled={isLoading}
             />
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               disabled={isLoading || !input.trim()}
               className="absolute right-2 bottom-2 h-10 w-10 rounded-xl p-0 flex items-center justify-center shadow-lg shadow-shu/20"
             >
               <span className="text-xl leading-none">↑</span>
             </Button>
           </form>
-          <p className="text-[10px] text-center text-ink-4 mt-2">
-            Shift + Enter で改行できます
-          </p>
+          <p className="text-[10px] text-center text-ink-4 mt-2">Shift + Enter で改行できます</p>
         </PageContainer>
       </div>
     </div>

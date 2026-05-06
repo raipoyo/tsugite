@@ -8,6 +8,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Removed
+
+- マッチング機能（募集・応募）に関するすべてのUI・ルート・型・モックデータを削除。tsugiteはマッチング機能を提供しないため
+  - `app/shop/listings/` — 募集一覧・作成・編集ページ
+  - `app/(marketing)/opportunities/` — 公開募集一覧・詳細ページ
+  - `app/shop/applications/page.tsx` — 店側応募者一覧
+  - `app/successor/applications/page.tsx` — 継ぎ手側応募履歴
+  - `types/opportunity.ts` — Opportunity 型定義
+  - `lib/mock-listings.ts` — ShopListingDraft 型・モックデータ
+  - `lib/mock-opportunities.ts` — MOCK_OPPORTUNITIES・getOpportunityById
+- `app/shop/layout.tsx`: ナビから「募集管理」「応募」リンクを削除
+- `app/successor/layout.tsx`: ナビから「応募一覧」リンクを削除
+- `app/(marketing)/page.tsx`: Hero の「継ぎ手として探す」ボタン、店主カードの「後継者募集の掲載・応募者管理」、継ぎ手カードの「全国の後継者募集を一覧で探す」・「募集を探す」ボタンを削除
+- `app/successor/page.tsx`: MOCK_OPPORTUNITIES 参照・応募状況ダミーブロックを削除し、シンプルなダッシュボードに置き換え
+
 ### Fixed
 
 - `app/shop/archive/[id]/page.tsx`: `getSignedInterviewUrl` を `features/hackathon/real-data` から直接 Supabase Storage の `createSignedUrl` 呼び出しにインライン化。hackathon モジュール依存を除去

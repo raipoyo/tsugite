@@ -7,7 +7,6 @@ import { parseUserRole } from '@/lib/roles'
 const SUCCESSOR_NAV = [
   { href: '/successor', label: '概要' },
   { href: '/successor/profile', label: 'プロフィール' },
-  { href: '/successor/applications', label: '応募一覧' },
   { href: '/successor/archive', label: 'Archive閲覧' },
   { href: '/successor/agent', label: 'Agent - 先代に相談' },
   { href: '/successor/settings', label: '設定' },

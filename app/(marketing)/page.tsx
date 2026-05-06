@@ -34,12 +34,6 @@ export default function LandingPage() {
             >
               店主として始める
             </Link>
-            <Link
-              href="/opportunities"
-              className="inline-flex h-11 min-w-[9rem] items-center justify-center rounded-lg border border-washi-3 bg-white px-5 text-sm font-semibold text-ink transition hover:bg-washi focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
-            >
-              継ぎ手として探す
-            </Link>
           </div>
         </Container>
       </section>
@@ -97,7 +91,6 @@ export default function LandingPage() {
                 <li>— インタビュー動画をArchiveに登録</li>
                 <li>— 正解シーンをGuideに設定</li>
                 <li>— 後継者からの相談にAgentが自動応答</li>
-                <li>— 後継者募集の掲載・応募者管理</li>
               </ul>
               <div className="mt-6">
                 <Link
@@ -112,21 +105,12 @@ export default function LandingPage() {
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-ink-4">
                 継ぎ手・後継者
               </p>
-              <h3 className="mt-3 text-xl font-semibold text-ink">現場で学び、機会を見つける</h3>
+              <h3 className="mt-3 text-xl font-semibold text-ink">現場で学ぶ</h3>
               <ul className="mt-4 space-y-2 text-sm leading-relaxed text-ink-3">
-                <li>— 全国の後継者募集を一覧で探す</li>
                 <li>— Archiveで先代の考え方を事前に学ぶ</li>
                 <li>— Guideで現場の所作をリアルタイム確認</li>
                 <li>— Agentで判断に迷ったとき即相談</li>
               </ul>
-              <div className="mt-6">
-                <Link
-                  href="/opportunities"
-                  className="inline-flex h-9 items-center justify-center rounded-lg border border-washi-3 bg-white px-4 text-sm font-semibold text-ink transition hover:bg-washi"
-                >
-                  募集を探す
-                </Link>
-              </div>
             </Card>
           </div>
         </Container>

@@ -8,22 +8,36 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- `components/layout/`: 共通レイアウトコンポーネントを新設
+  - `PageContainer`: 画面の最大幅とパディングを一括管理
+  - `PageHeader`: ページタイトル、説明文、アクションエリアを標準化
+  - `SplitLayout`: カメラビューとフィードバックなど、2カラムのレスポンシブレイアウトをサポート
+  - `GridList`: カード群を並べるレスポンシブグリッドレイアウトを提供
+- Agent RAG 検索に、embedding 済みタグが不足した場合の最近の暗黙知タグフォールバックを追加。Archive でタグ抽出済みだが embedding が未生成の状態でも、記録を根拠にした回答へ寄せられるようにした
+- Agent 用の Supabase migration `20260506130000_agent_rag_rpc_and_access.sql` を追加。pgvector 類似検索 RPC と、`profiles.organization_ids` による継ぎ手向け参照ポリシーを定義した
+
 ### Changed
 
+- **UIデザインとカラートークンの一貫性を向上**
+  - プロジェクト独自のデザイントークン (`washi`, `ink`, `shu` 等) に全画面のカラー指定を統一。
+  - **Archive**: カードをグリッドレイアウトに変更し、ダッシュボードとしての視認性を向上。
+  - **Guide**: `SplitLayout` を導入。カメラビューと操作パネルを左右に分離し、作業時の目線移動を最適化。ステータスバッジをカメラにオーバーレイ表示。
+  - **Agent**: チャット領域の最大幅を制限し、可読性を向上。入力フォームを画面下部に固定し、モダンなフローティングUIに刷新。サンプル質問を Pill 型のチップに変更。
 - Agent RAG チャットを、暗黙知タグの参照が回答 UI に残る構成へ変更。`X-Citations` ヘッダーではなく AI SDK の `data-citations` part として参照タグをストリームし、各 assistant message の下に状況・判断理由の出典を表示するようにした
 - `/api/agent/chat` に Supabase 認証と shop アクセス確認を追加。店主自身の shop、または暫定的に `profiles.organization_ids` に含まれる shop のみ RAG 参照できるようにした
 - `/successor/agent` は固定のモック shopId を使わず、`profiles.organization_ids` の先頭 shop を参照するよう変更。紐づきが無い場合は未設定状態を表示する
 - Agent RAG の DB 参照を `DATABASE_URL` での direct Postgres 接続から Supabase HTTP/RPC 経由に変更。ローカルやホスティング環境で 5432 接続が閉じていてもチャットが失敗しないようにした
 
-### Added
-
-- Agent RAG 検索に、embedding 済みタグが不足した場合の最近の暗黙知タグフォールバックを追加。Archive でタグ抽出済みだが embedding が未生成の状態でも、記録を根拠にした回答へ寄せられるようにした
-- Agent 用の Supabase migration `20260506130000_agent_rag_rpc_and_access.sql` を追加。pgvector 類似検索 RPC と、`profiles.organization_ids` による継ぎ手向け参照ポリシーを定義した
-
 ### Fixed
 
 - `proxy.ts` を `middleware.ts` にリネームし `export default` に変更。ファイル名・エクスポート形式が誤っていたため Next.js にミドルウェアとして認識されず、セッションリフレッシュと保護ルートの未認証リダイレクトが一切動いていなかった
 - `app/auth/callback/route.ts`: `request.url` の origin が dev server のバインドアドレス `0.0.0.0:3000` になる問題を修正。`x-forwarded-host` → `host` ヘッダーの優先順で origin を組み立てるよう変更し、ローカル開発時のログイン後リダイレクトが本番 URL に飛ぶ問題を解消
+
+### Removed
+
+- 各機能画面での個別の `max-w-7xl` や余白指定（`PageContainer` への移行に伴い削除）。
 
 ### Removed
 

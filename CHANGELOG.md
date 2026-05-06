@@ -10,6 +10,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Removed
 
+- `app/auth/signup/page.tsx` をプレースホルダーUIから `/login` へのredirectに変更。登録はGoogleOAuth一本のため
+
+- `app/register/` を廃止し `app/onboarding/` に集約。オンボーディングフローを一箇所に統一
+  - `app/register/shop/` → `app/onboarding/shop/`
+  - `app/register/successor/` → `app/onboarding/successor/`
+  - URL参照を更新: `features/onboarding/actions.ts`, `app/shop/guide/page.tsx`
+
+- 認証関連の冗長ルートを削除・整理。`/auth/*` を `app/auth/` 一本に集約
+  - `app/sign-in/` — Clerk 残骸（`/sign-in` → `/login` redirect のみ）
+  - `app/sign-up/` — Clerk 残骸（`/sign-up` → `/login` redirect のみ）
+  - `app/(auth)/auth/login/` — 不要な redirect（`/auth/login` → `/login`）
+  - `app/(auth)/auth/role/` — 不要な redirect（`/auth/role` → `/onboarding/role`）
+  - `app/(auth)/` ルートグループ — layout なしで意味がなかったため廃止
+- `app/(auth)/auth/signup/page.tsx` を `app/auth/signup/page.tsx` に移動（`/auth/*` を一箇所に集約）
+
 - マッチング機能（募集・応募）に関するすべてのUI・ルート・型・モックデータを削除。tsugiteはマッチング機能を提供しないため
   - `app/shop/listings/` — 募集一覧・作成・編集ページ
   - `app/(marketing)/opportunities/` — 公開募集一覧・詳細ページ

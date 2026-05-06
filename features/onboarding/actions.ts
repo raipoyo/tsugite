@@ -18,5 +18,5 @@ export async function setUserRole(role: UserRole): Promise<void> {
     redirect('/onboarding/role?error=failed')
   }
 
-  redirect(role === 'shop' ? '/register/shop' : '/register/successor')
+  redirect(role === 'shop' ? '/onboarding/shop' : '/onboarding/successor')
 }

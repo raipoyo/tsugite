@@ -8,9 +8,7 @@ export default function LandingPage() {
     <main className="flex flex-1 flex-col">
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-washi-2 py-20">
-        {/* 和紙テクスチャ風グラジェント — アプリの PageHeader と同じ shu radial 手法 */}
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(240,216,208,0.55),transparent_55%),linear-gradient(to_bottom,#eef0ec,#dde2dc)]" />
-        {/* 細かいノイズ感のオーバーレイ */}
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.03]"
           style={{
@@ -29,65 +27,104 @@ export default function LandingPage() {
             Archiveで先代の判断を残し、Guideで現場の所作を判定し、Agentで迷った瞬間に相談する。
             職人・旅館・老舗飲食——言語化されてこなかった技と判断を、次の世代へ渡す。
           </p>
-          <div className="mt-10">
+          <div className="mt-10 flex flex-wrap gap-3">
             <Link
-              href="/app"
-              className="inline-flex h-11 min-w-[9rem] w-full items-center justify-center rounded-lg bg-shu px-5 text-sm font-semibold text-white transition hover:bg-shu-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-shu sm:w-auto"
+              href="/auth/signup"
+              className="inline-flex h-11 min-w-[9rem] items-center justify-center rounded-lg bg-shu px-5 text-sm font-semibold text-white transition hover:bg-shu-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-shu"
             >
-              はじめる
+              店主として始める
+            </Link>
+            <Link
+              href="/opportunities"
+              className="inline-flex h-11 min-w-[9rem] items-center justify-center rounded-lg border border-washi-3 bg-white px-5 text-sm font-semibold text-ink transition hover:bg-washi focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+            >
+              継ぎ手として探す
             </Link>
           </div>
         </Container>
       </section>
 
-      {/* 機能紹介 */}
+      {/* 3機能説明 */}
       <section className="py-16 md:py-24">
         <Container>
-          <div className="grid gap-6 md:grid-cols-3">
+          <h2 className="text-center font-serif text-2xl font-semibold tracking-tight text-ink">
+            3つの機能で、暗黙知を資産に変える
+          </h2>
+          <div className="mt-10 grid gap-6 md:grid-cols-3">
             <Card className="p-6">
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-ink-4">
                 Archive
               </p>
-              <h2 className="mt-3 text-lg font-semibold text-ink">先代の判断を残す</h2>
+              <h3 className="mt-3 text-lg font-semibold text-ink">先代の判断を残す</h3>
               <p className="mt-3 text-sm leading-relaxed text-ink-3">
-                先代へのインタビュー動画から、状況・判断・理由の3層タグを抽出します。
+                先代へのインタビュー動画から、状況・判断・理由の3層タグを自動抽出します。
+                蓄積した暗黙知はGuideとAgentの原資になります。
               </p>
-              <div className="mt-6">
-                <Link
-                  className="text-sm font-semibold text-shu underline-offset-4 hover:text-shu-2 hover:underline"
-                  href="/app/archive"
-                >
-                  Archiveを開く →
-                </Link>
-              </div>
             </Card>
             <Card className="p-6">
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-ink-4">Guide</p>
-              <h2 className="mt-3 text-lg font-semibold text-ink">現場の所作を判定する</h2>
+              <h3 className="mt-3 text-lg font-semibold text-ink">現場の所作を判定する</h3>
               <p className="mt-3 text-sm leading-relaxed text-ink-3">
                 正解の所作と現場をリアルタイムで比較し、ズレた点だけを短く返します。
+                後継者がひとりで現場に立てる日を早めます。
               </p>
-              <div className="mt-6">
-                <Link
-                  className="text-sm font-semibold text-shu underline-offset-4 hover:text-shu-2 hover:underline"
-                  href="/app/guide"
-                >
-                  Guideを開く →
-                </Link>
-              </div>
             </Card>
             <Card className="p-6">
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-ink-4">Agent</p>
-              <h2 className="mt-3 text-lg font-semibold text-ink">迷った瞬間に相談する</h2>
+              <h3 className="mt-3 text-lg font-semibold text-ink">迷った瞬間に相談する</h3>
               <p className="mt-3 text-sm leading-relaxed text-ink-3">
                 Archiveから抽出した暗黙知を出典に、先代の判断を再現するAIに相談できます。
+                「あの時どうしてたっけ」をいつでも引き出せます。
               </p>
+            </Card>
+          </div>
+        </Container>
+      </section>
+
+      {/* 誰向けか */}
+      <section className="border-t border-washi-2 py-16">
+        <Container>
+          <h2 className="text-center font-serif text-2xl font-semibold tracking-tight text-ink">
+            店主と継ぎ手、それぞれの使い方
+          </h2>
+          <div className="mt-10 grid gap-6 md:grid-cols-2">
+            <Card className="p-8">
+              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-ink-4">
+                店主・先代
+              </p>
+              <h3 className="mt-3 text-xl font-semibold text-ink">暗黙知を蓄積して後継者を育てる</h3>
+              <ul className="mt-4 space-y-2 text-sm leading-relaxed text-ink-3">
+                <li>— インタビュー動画をArchiveに登録</li>
+                <li>— 正解シーンをGuideに設定</li>
+                <li>— 後継者からの相談にAgentが自動応答</li>
+                <li>— 後継者募集の掲載・応募者管理</li>
+              </ul>
               <div className="mt-6">
                 <Link
-                  className="text-sm font-semibold text-shu underline-offset-4 hover:text-shu-2 hover:underline"
-                  href="/app/agent"
+                  href="/auth/signup"
+                  className="inline-flex h-9 items-center justify-center rounded-lg bg-shu px-4 text-sm font-semibold text-white transition hover:bg-shu-2"
                 >
-                  Agentを開く →
+                  店主として登録する
+                </Link>
+              </div>
+            </Card>
+            <Card className="p-8">
+              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-ink-4">
+                継ぎ手・後継者
+              </p>
+              <h3 className="mt-3 text-xl font-semibold text-ink">現場で学び、機会を見つける</h3>
+              <ul className="mt-4 space-y-2 text-sm leading-relaxed text-ink-3">
+                <li>— 全国の後継者募集を一覧で探す</li>
+                <li>— Archiveで先代の考え方を事前に学ぶ</li>
+                <li>— Guideで現場の所作をリアルタイム確認</li>
+                <li>— Agentで判断に迷ったとき即相談</li>
+              </ul>
+              <div className="mt-6">
+                <Link
+                  href="/opportunities"
+                  className="inline-flex h-9 items-center justify-center rounded-lg border border-washi-3 bg-white px-4 text-sm font-semibold text-ink transition hover:bg-washi"
+                >
+                  募集を探す
                 </Link>
               </div>
             </Card>

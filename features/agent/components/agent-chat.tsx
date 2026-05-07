@@ -3,9 +3,10 @@
 import { useState, useRef, useEffect } from 'react'
 import { useChat } from '@ai-sdk/react'
 import { DefaultChatTransport, type UIMessage } from 'ai'
+import { cn } from '@/lib/cn'
 import Button from '@/components/ui/button'
 import Badge from '@/components/ui/badge'
-import Card from '@/components/ui/card'
+import PageContainer from '@/components/layout/page-container'
 import type { ChatCitation } from '@/types/agent'
 
 type AgentChatProps = {
@@ -85,7 +86,7 @@ export default function AgentChat({ shopId }: AgentChatProps) {
   }
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col bg-washi-2">
       {/* Hidden audio element */}
       <audio
         ref={audioRef}
@@ -94,61 +95,80 @@ export default function AgentChat({ shopId }: AgentChatProps) {
       />
 
       {/* Messages area */}
-      <div className="flex-1 space-y-4 overflow-y-auto p-4">
-        {messages.length === 0 && (
-          <div className="flex h-full items-center justify-center text-center">
-            <div className="space-y-2">
-              <h3 className="text-lg font-medium text-ink">先代女将に相談できます</h3>
-              <p className="text-sm text-ink/60">
+      <div className="flex-1 overflow-y-auto">
+        <PageContainer maxWidth="2xl" className="py-8 space-y-6">
+          {messages.length === 0 && (
+            <div className="flex flex-col items-center justify-center text-center py-12">
+              <div className="h-16 w-16 rounded-full bg-shu/10 flex items-center justify-center mb-6">
+                <span className="text-3xl">👵</span>
+              </div>
+              <h3 className="text-xl font-bold text-ink mb-2">先代女将に相談できます</h3>
+              <p className="text-sm text-ink-3 max-w-sm mb-8">
                 困ったことや判断に迷うことがあれば、お気軽にご質問ください。
               </p>
-              <div className="mt-4 space-y-2 text-left">
-                <p className="text-xs font-medium text-ink/60">サンプル質問:</p>
-                <div className="space-y-1">
-                  <button
-                    onClick={() => {
-                      setInput('常連の田中様が来られた時の対応は？')
-                    }}
-                    className="block w-full rounded border border-ink/10 p-2 text-left text-xs text-ink/80 hover:bg-washi/50"
-                  >
-                    • 常連の田中様が来られた時の対応は？
-                  </button>
-                  <button
-                    onClick={() => {
-                      setInput('季節の挨拶で気をつけることは？')
-                    }}
-                    className="block w-full rounded border border-ink/10 p-2 text-left text-xs text-ink/80 hover:bg-washi/50"
-                  >
-                    • 季節の挨拶で気をつけることは？
-                  </button>
-                  <button
-                    onClick={() => {
-                      setInput('お茶の温度はどのくらいが適切？')
-                    }}
-                    className="block w-full rounded border border-ink/10 p-2 text-left text-xs text-ink/80 hover:bg-washi/50"
-                  >
-                    • お茶の温度はどのくらいが適切？
-                  </button>
+
+              <div className="w-full space-y-3">
+                <p className="text-xs font-bold text-ink-4 uppercase tracking-widest text-left ml-1">
+                  よくある質問
+                </p>
+                <div className="grid grid-cols-1 gap-2">
+                  {[
+                    '常連の田中様が来られた時の対応は？',
+                    '季節の挨拶で気をつけることは？',
+                    'お茶の温度はどのくらいが適切？',
+                  ].map((q) => (
+                    <button
+                      key={q}
+                      onClick={() => setInput(q)}
+                      className="text-left p-4 rounded-xl border border-washi-3 bg-white text-sm text-ink hover:border-shu/30 hover:bg-shu/5 transition-all shadow-sm"
+                    >
+                      {q}
+                    </button>
+                  ))}
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {messages.map((message) => (
-          <div
-            key={message.id}
-            className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-          >
-            <Card
-              className={`max-w-[80%] p-4 ${
-                message.role === 'user' ? 'bg-shu/10 text-ink' : 'bg-washi text-ink'
-              }`}
+          {messages.map((message) => (
+            <div
+              key={message.id}
+              className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
             >
-              <div className="whitespace-pre-wrap text-sm">
-                {message.parts.map((part, index) =>
-                  part.type === 'text' ? <span key={index}>{part.text}</span> : null,
+              <div
+                className={cn(
+                  'max-w-[85%] rounded-2xl p-4 shadow-sm',
+                  message.role === 'user'
+                    ? 'bg-shu text-white rounded-tr-none'
+                    : 'bg-white text-ink border border-washi-3 rounded-tl-none',
                 )}
+              >
+                <div className="whitespace-pre-wrap text-sm leading-relaxed">
+                  {message.parts.map((part, index) =>
+                    part.type === 'text' ? <span key={index}>{part.text}</span> : null,
+                  )}
+                </div>
+                {message.role === 'assistant' &&
+                  audioUrl &&
+                  messages[messages.length - 1].id === message.id && (
+                    <div className="mt-3 pt-3 border-t border-washi-3">
+                      <button
+                        onClick={handlePlayAudio}
+                        disabled={isPlayingAudio}
+                        className="flex items-center gap-2 text-xs font-bold text-shu hover:opacity-80 disabled:opacity-50 transition-all"
+                      >
+                        {isPlayingAudio ? (
+                          <span className="flex items-center gap-1">
+                            <span className="h-1 w-1 bg-shu animate-bounce"></span>
+                            <span className="h-1 w-1 bg-shu animate-bounce [animation-delay:0.2s]"></span>
+                            再生中...
+                          </span>
+                        ) : (
+                          '🔊 音声で聞く'
+                        )}
+                      </button>
+                    </div>
+                  )}
               </div>
               {message.role === 'assistant' && getMessageCitations(message).length > 0 && (
                 <div className="mt-4 border-t border-ink/10 pt-3">
@@ -173,36 +193,24 @@ export default function AgentChat({ shopId }: AgentChatProps) {
                   </div>
                 </div>
               )}
-              {message.role === 'assistant' &&
-                audioUrl &&
-                messages[messages.length - 1].id === message.id && (
-                  <div className="mt-2">
-                    <button
-                      onClick={handlePlayAudio}
-                      disabled={isPlayingAudio}
-                      className="text-xs text-shu hover:underline disabled:opacity-50"
-                    >
-                      {isPlayingAudio ? '再生中...' : '音声で聞く'}
-                    </button>
-                  </div>
-                )}
-            </Card>
-          </div>
-        ))}
+            </div>
+          ))}
 
-        {isLoading && messages[messages.length - 1]?.role === 'user' && (
-          <div className="flex justify-start">
-            <Card className="max-w-[80%] bg-washi p-4 text-ink">
-              <div className="flex items-center space-x-2">
-                <div className="h-2 w-2 animate-pulse rounded-full bg-ink/60"></div>
-                <div className="h-2 w-2 animate-pulse rounded-full bg-ink/60 [animation-delay:0.2s]"></div>
-                <div className="h-2 w-2 animate-pulse rounded-full bg-ink/60 [animation-delay:0.4s]"></div>
+
+          {isLoading && messages[messages.length - 1]?.role === 'user' && (
+            <div className="flex justify-start">
+              <div className="bg-white border border-washi-3 rounded-2xl rounded-tl-none p-4 shadow-sm">
+                <div className="flex items-center space-x-1.5">
+                  <div className="h-1.5 w-1.5 animate-bounce rounded-full bg-ink/30"></div>
+                  <div className="h-1.5 w-1.5 animate-bounce rounded-full bg-ink/30 [animation-delay:0.2s]"></div>
+                  <div className="h-1.5 w-1.5 animate-bounce rounded-full bg-ink/30 [animation-delay:0.4s]"></div>
+                </div>
               </div>
-            </Card>
-          </div>
-        )}
+            </div>
+          )}
 
-        <div ref={messagesEndRef} />
+          <div ref={messagesEndRef} className="h-4" />
+        </PageContainer>
       </div>
 
       {error && (
@@ -212,29 +220,45 @@ export default function AgentChat({ shopId }: AgentChatProps) {
       )}
 
       {/* Input area */}
-      <form
-        onSubmit={(event) => {
-          event.preventDefault()
-          if (!input.trim()) return
-          sendMessage({ text: input })
-          setInput('')
-        }}
-        className="border-t border-ink/10 p-4"
-      >
-        <div className="flex space-x-2">
-          <textarea
-            value={input}
-            onChange={(event) => setInput(event.target.value)}
-            placeholder="質問を入力してください..."
-            className="flex-1 resize-none rounded-md border border-washi-3 bg-white px-3 py-2 text-base text-ink shadow-xs transition-colors placeholder:text-ink-4 hover:border-ink-4 focus:border-shu focus:outline-2 focus:outline-offset-2 focus:outline-shu disabled:cursor-not-allowed disabled:bg-washi disabled:text-ink-4"
-            rows={3}
-            disabled={isLoading}
-          />
-          <Button type="submit" disabled={isLoading || !input.trim()}>
-            送信
-          </Button>
-        </div>
-      </form>
+      <div className="bg-washi-2/80 backdrop-blur-md border-t border-washi-3 pb-6">
+        <PageContainer maxWidth="2xl" className="py-4">
+          <form
+            onSubmit={(event) => {
+              event.preventDefault()
+              if (!input.trim()) return
+              sendMessage({ text: input })
+              setInput('')
+            }}
+            className="relative flex items-end gap-2"
+          >
+            <textarea
+              value={input}
+              onChange={(event) => setInput(event.target.value)}
+              placeholder="質問を入力してください..."
+              className="flex-1 min-h-[56px] max-h-[200px] resize-none rounded-2xl border border-washi-3 bg-white pl-4 pr-12 py-4 text-sm text-ink shadow-sm transition-all placeholder:text-ink-4 focus:border-shu focus:ring-4 focus:ring-shu/5 focus:outline-none disabled:bg-washi-3"
+              rows={1}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault()
+                  if (input.trim() && !isLoading) {
+                    sendMessage({ text: input })
+                    setInput('')
+                  }
+                }
+              }}
+              disabled={isLoading}
+            />
+            <Button
+              type="submit"
+              disabled={isLoading || !input.trim()}
+              className="absolute right-2 bottom-2 h-10 w-10 rounded-xl p-0 flex items-center justify-center shadow-lg shadow-shu/20"
+            >
+              <span className="text-xl leading-none">↑</span>
+            </Button>
+          </form>
+          <p className="text-[10px] text-center text-ink-4 mt-2">Shift + Enter で改行できます</p>
+        </PageContainer>
+      </div>
     </div>
   )
 }

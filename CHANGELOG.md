@@ -13,6 +13,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `features/guide/utils/vision.ts`: Vision 画像認識を Google Gemini (`gemini-2.0-flash-exp`) から OpenAI (`gpt-4o`) に置き換え。API を OpenAI に統一し、`@google/generative-ai` への依存を解消
   - `@google/generative-ai` パッケージを `package.json` から削除
   - 既存の `analyzeSceneWithVision` の入出力インターフェースは変更なし（既存の呼び出し元に影響なし）
+- Agent RAG チャットを、暗黙知タグの参照が回答 UI に残る構成へ変更。`X-Citations` ヘッダーではなく AI SDK の `data-citations` part として参照タグをストリームし、各 assistant message の下に状況・判断理由の出典を表示するようにした
+- `/api/agent/chat` に Supabase 認証と shop アクセス確認を追加。店主自身の shop、または暫定的に `profiles.organization_ids` に含まれる shop のみ RAG 参照できるようにした
+- `/successor/agent` は固定のモック shopId を使わず、`profiles.organization_ids` の先頭 shop を参照するよう変更。紐づきが無い場合は未設定状態を表示する
+- Agent RAG の DB 参照を `DATABASE_URL` での direct Postgres 接続から Supabase HTTP/RPC 経由に変更。ローカルやホスティング環境で 5432 接続が閉じていてもチャットが失敗しないようにした
+
+### Added
+
+- Agent RAG 検索に、embedding 済みタグが不足した場合の最近の暗黙知タグフォールバックを追加。Archive でタグ抽出済みだが embedding が未生成の状態でも、記録を根拠にした回答へ寄せられるようにした
+- Agent 用の Supabase migration `20260506130000_agent_rag_rpc_and_access.sql` を追加。pgvector 類似検索 RPC と、`profiles.organization_ids` による継ぎ手向け参照ポリシーを定義した
 
 ### Fixed
 

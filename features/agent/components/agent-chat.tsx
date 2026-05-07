@@ -2,8 +2,9 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { useChat } from '@ai-sdk/react'
-import { DefaultChatTransport } from 'ai'
+import { DefaultChatTransport, type UIMessage } from 'ai'
 import Button from '@/components/ui/button'
+import Badge from '@/components/ui/badge'
 import Card from '@/components/ui/card'
 import type { ChatCitation } from '@/types/agent'
 
@@ -11,16 +12,21 @@ type AgentChatProps = {
   shopId: string
 }
 
+type AgentChatMessage = UIMessage<unknown, { citations: ChatCitation[] }>
+
+function getMessageCitations(message: AgentChatMessage): ChatCitation[] {
+  return message.parts.find((part) => part.type === 'data-citations')?.data ?? []
+}
+
 export default function AgentChat({ shopId }: AgentChatProps) {
-  const [citations] = useState<ChatCitation[]>([])
   const [input, setInput] = useState('')
   const [audioUrl, setAudioUrl] = useState<string | null>(null)
   const [isPlayingAudio, setIsPlayingAudio] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
-  const { messages, sendMessage, status } = useChat({
-    transport: new DefaultChatTransport({
+  const { error, messages, sendMessage, status } = useChat<AgentChatMessage>({
+    transport: new DefaultChatTransport<AgentChatMessage>({
       api: '/api/agent/chat',
       body: { shopId },
     }),
@@ -53,7 +59,7 @@ export default function AgentChat({ shopId }: AgentChatProps) {
             // Auto-play audio
             if (audioRef.current) {
               audioRef.current.src = url
-              audioRef.current.play()
+              void audioRef.current.play()
               setIsPlayingAudio(true)
             }
           }
@@ -73,7 +79,7 @@ export default function AgentChat({ shopId }: AgentChatProps) {
 
   const handlePlayAudio = () => {
     if (audioRef.current && audioUrl) {
-      audioRef.current.play()
+      void audioRef.current.play()
       setIsPlayingAudio(true)
     }
   }
@@ -144,6 +150,29 @@ export default function AgentChat({ shopId }: AgentChatProps) {
                   part.type === 'text' ? <span key={index}>{part.text}</span> : null,
                 )}
               </div>
+              {message.role === 'assistant' && getMessageCitations(message).length > 0 && (
+                <div className="mt-4 border-t border-ink/10 pt-3">
+                  <div className="text-xs font-medium text-ink/60">参照した暗黙知タグ</div>
+                  <div className="mt-2 space-y-2">
+                    {getMessageCitations(message).map((citation) => (
+                      <div
+                        key={citation.id}
+                        className="rounded-md border border-washi-3 bg-white p-2"
+                      >
+                        <div className="flex items-center gap-2">
+                          <p className="min-w-0 flex-1 truncate text-xs font-semibold text-ink">
+                            {citation.title}
+                          </p>
+                          <Badge tone={citation.retrieval === 'vector' ? 'success' : 'neutral'}>
+                            {citation.retrieval === 'vector' ? '類似' : '最近'}
+                          </Badge>
+                        </div>
+                        <p className="mt-1 text-xs text-ink/70">{citation.excerpt}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
               {message.role === 'assistant' &&
                 audioUrl &&
                 messages[messages.length - 1].id === message.id && (
@@ -153,7 +182,7 @@ export default function AgentChat({ shopId }: AgentChatProps) {
                       disabled={isPlayingAudio}
                       className="text-xs text-shu hover:underline disabled:opacity-50"
                     >
-                      {isPlayingAudio ? '再生中...' : '🔊 音声で聞く'}
+                      {isPlayingAudio ? '再生中...' : '音声で聞く'}
                     </button>
                   </div>
                 )}
@@ -176,17 +205,9 @@ export default function AgentChat({ shopId }: AgentChatProps) {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Citations area */}
-      {citations.length > 0 && messages[messages.length - 1]?.role === 'assistant' && (
-        <div className="border-t border-ink/10 bg-washi/50 p-4">
-          <div className="text-xs font-medium text-ink/60">参照した記録:</div>
-          <div className="mt-2 space-y-1">
-            {citations.map((citation, idx) => (
-              <div key={idx} className="text-xs text-ink/80">
-                • {citation.title}
-              </div>
-            ))}
-          </div>
+      {error && (
+        <div className="border-t border-danger/20 bg-danger-bg px-4 py-3 text-sm text-danger">
+          Agent の応答生成に失敗しました。ログイン状態と店舗へのアクセス権を確認してください。
         </div>
       )}
 

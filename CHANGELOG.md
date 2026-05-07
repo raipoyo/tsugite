@@ -22,6 +22,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- `features/guide/utils/vision.ts`: Vision 画像認識を Google Gemini (`gemini-2.0-flash-exp`) から OpenAI (`gpt-4o`) に置き換え。API を OpenAI に統一し、`@google/generative-ai` への依存を解消
+  - `@google/generative-ai` パッケージを `package.json` から削除
+  - 既存の `analyzeSceneWithVision` の入出力インターフェースは変更なし（既存の呼び出し元に影響なし）
+- Agent RAG チャットを、暗黙知タグの参照が回答 UI に残る構成へ変更。`X-Citations` ヘッダーではなく AI SDK の `data-citations` part として参照タグをストリームし、各 assistant message の下に状況・判断理由の出典を表示するようにした
+- `/api/agent/chat` に Supabase 認証と shop アクセス確認を追加。店主自身の shop、または暫定的に `profiles.organization_ids` に含まれる shop のみ RAG 参照できるようにした
+- `/successor/agent` は固定のモック shopId を使わず、`profiles.organization_ids` の先頭 shop を参照するよう変更。紐づきが無い場合は未設定状態を表示する
+- Agent RAG の DB 参照を `DATABASE_URL` での direct Postgres 接続から Supabase HTTP/RPC 経由に変更。ローカルやホスティング環境で 5432 接続が閉じていてもチャットが失敗しないようにした
 - **ダッシュボード UI の刷新**:
   - `features/dashboard/dashboard-side-nav.tsx`: 従来のヘッダーメニュー型から、モダンなサイドバーレイアウトに変更。プロフィールと設定のリンクをメインメニューから削除し、下部のアカウントボックスに集約
   - `app/shop/layout.tsx` / `app/successor/layout.tsx`: メインナビゲーションを整理し、サイドバーにユーザー情報を表示するよう更新

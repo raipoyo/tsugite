@@ -8,22 +8,58 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- `features/agent/components/agent-chat.tsx`: `cn` のインポートが欠落していたため Vercel ビルドで TypeScript エラーが発生していた。`@/lib/cn` からのインポートを追加。
+- `features/agent/components/agent-chat.tsx`: `PageContainer` の `maxWidth` に存在しない値 `"3xl"` を使用していたため TypeScript ビルドエラーが発生していた。有効な値 `"2xl"` に修正。
+
+### Added
+
+- `features/dashboard/dashboard-user-nav.tsx`: サイドバー最下部のアカウント情報ボックスを新設
+  - ユーザー名、メールアドレス、プロフィールアイコン（頭文字）を表示
+  - クリックでプロフィール編集、設定、ログアウトのメニューを展開
+- `lucide-react`: アイコンライブラリを追加
+
 ### Changed
 
+- **ダッシュボード UI の刷新**:
+  - `features/dashboard/dashboard-side-nav.tsx`: 従来のヘッダーメニュー型から、モダンなサイドバーレイアウトに変更。プロフィールと設定のリンクをメインメニューから削除し、下部のアカウントボックスに集約
+  - `app/shop/layout.tsx` / `app/successor/layout.tsx`: メインナビゲーションを整理し、サイドバーにユーザー情報を表示するよう更新
+  - サイドバー幅を `md:w-52` から `md:w-64` に拡張し、情報密度を最適化
+  - デスクトップ表示時にサイドバーを `sticky` にし、スクロールしてもナビゲーションが固定されるよう改善
+  - ユーザーナビのホバー表現を微調整
+  - **ダッシュボード概要ページの充実**: `app/shop/page.tsx` および `app/successor/page.tsx` に、統計情報やクイックアクセスカードを追加し、ダッシュボードとしての機能性と視認性を大幅に向上
+
+### Added
+
+- `components/layout/`: 共通レイアウトコンポーネントを新設
+  - `PageContainer`: 画面の最大幅とパディングを一括管理
+  - `PageHeader`: ページタイトル、説明文、アクションエリアを標準化
+  - `SplitLayout`: カメラビューとフィードバックなど、2カラムのレスポンシブレイアウトをサポート
+  - `GridList`: カード群を並べるレスポンシブグリッドレイアウトを提供
+- Agent RAG 検索に、embedding 済みタグが不足した場合の最近の暗黙知タグフォールバックを追加。Archive でタグ抽出済みだが embedding が未生成の状態でも、記録を根拠にした回答へ寄せられるようにした
+- Agent 用の Supabase migration `20260506130000_agent_rag_rpc_and_access.sql` を追加。pgvector 類似検索 RPC と、`profiles.organization_ids` による継ぎ手向け参照ポリシーを定義した
+
+### Changed
+
+- **UIデザインとカラートークンの一貫性を向上**
+  - プロジェクト独自のデザイントークン (`washi`, `ink`, `shu` 等) に全画面のカラー指定を統一。
+  - **Archive**: カードをグリッドレイアウトに変更し、ダッシュボードとしての視認性を向上。
+  - **Guide**: `SplitLayout` を導入。カメラビューと操作パネルを左右に分離し、作業時の目線移動を最適化。ステータスバッジをカメラにオーバーレイ表示。
+  - **Agent**: チャット領域の最大幅を制限し、可読性を向上。入力フォームを画面下部に固定し、モダンなフローティングUIに刷新。サンプル質問を Pill 型のチップに変更。
 - Agent RAG チャットを、暗黙知タグの参照が回答 UI に残る構成へ変更。`X-Citations` ヘッダーではなく AI SDK の `data-citations` part として参照タグをストリームし、各 assistant message の下に状況・判断理由の出典を表示するようにした
 - `/api/agent/chat` に Supabase 認証と shop アクセス確認を追加。店主自身の shop、または暫定的に `profiles.organization_ids` に含まれる shop のみ RAG 参照できるようにした
 - `/successor/agent` は固定のモック shopId を使わず、`profiles.organization_ids` の先頭 shop を参照するよう変更。紐づきが無い場合は未設定状態を表示する
 - Agent RAG の DB 参照を `DATABASE_URL` での direct Postgres 接続から Supabase HTTP/RPC 経由に変更。ローカルやホスティング環境で 5432 接続が閉じていてもチャットが失敗しないようにした
 
-### Added
-
-- Agent RAG 検索に、embedding 済みタグが不足した場合の最近の暗黙知タグフォールバックを追加。Archive でタグ抽出済みだが embedding が未生成の状態でも、記録を根拠にした回答へ寄せられるようにした
-- Agent 用の Supabase migration `20260506130000_agent_rag_rpc_and_access.sql` を追加。pgvector 類似検索 RPC と、`profiles.organization_ids` による継ぎ手向け参照ポリシーを定義した
-
 ### Fixed
 
 - `proxy.ts` を `middleware.ts` にリネームし `export default` に変更。ファイル名・エクスポート形式が誤っていたため Next.js にミドルウェアとして認識されず、セッションリフレッシュと保護ルートの未認証リダイレクトが一切動いていなかった
 - `app/auth/callback/route.ts`: `request.url` の origin が dev server のバインドアドレス `0.0.0.0:3000` になる問題を修正。`x-forwarded-host` → `host` ヘッダーの優先順で origin を組み立てるよう変更し、ローカル開発時のログイン後リダイレクトが本番 URL に飛ぶ問題を解消
+
+### Removed
+
+- 各機能画面での個別の `max-w-7xl` や余白指定（`PageContainer` への移行に伴い削除）。
 
 ### Removed
 

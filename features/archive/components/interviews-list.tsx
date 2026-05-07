@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Card from '@/components/ui/card'
 import Button from '@/components/ui/button'
 import StatusBadge from '@/components/ui/status-badge'
+import GridList from '@/components/layout/grid-list'
 
 import type { Interview } from '@/features/archive/types'
 
@@ -28,26 +29,26 @@ export default function InterviewsList({ interviews, onProcess }: InterviewsList
 
   if (interviews.length === 0) {
     return (
-      <div className="text-center py-8 text-zinc-500 dark:text-zinc-400">
+      <div className="text-center py-12 text-ink-3">
         まだインタビュー動画・音声がアップロードされていません。
       </div>
     )
   }
 
   return (
-    <div className="space-y-4">
+    <GridList columns={2}>
       {interviews.map((interview) => (
-        <Card key={interview.id} className="flex flex-col gap-4">
+        <Card key={interview.id} className="flex flex-col gap-4 p-5">
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+              <h3 className="text-sm font-semibold text-ink">
                 インタビュー #{interview.id.slice(0, 8)}
               </h3>
-              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+              <p className="text-xs text-ink-3 mt-1">
                 アップロード日時: {new Date(interview.createdAt).toLocaleString('ja-JP')}
               </p>
               {interview.durationSec && (
-                <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                <p className="text-xs text-ink-3">
                   長さ: {Math.floor(interview.durationSec / 60)}分{interview.durationSec % 60}秒
                 </p>
               )}
@@ -56,11 +57,11 @@ export default function InterviewsList({ interviews, onProcess }: InterviewsList
           </div>
 
           {interview.transcript && (
-            <div className="border-t border-zinc-200 dark:border-zinc-800 pt-3">
-              <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-2">
+            <div className="border-t border-washi-3 pt-3">
+              <p className="text-xs font-medium text-ink-3 mb-2">
                 文字起こし
               </p>
-              <p className="text-sm text-zinc-700 dark:text-zinc-300 line-clamp-3">
+              <p className="text-sm text-ink-2 line-clamp-3">
                 {interview.transcript}
               </p>
             </div>
@@ -71,12 +72,13 @@ export default function InterviewsList({ interviews, onProcess }: InterviewsList
               size="sm"
               onClick={() => handleProcess(interview.id)}
               disabled={processingId === interview.id}
+              className="mt-auto"
             >
               {processingId === interview.id ? '処理中...' : '文字起こし・暗黙知抽出'}
             </Button>
           )}
         </Card>
       ))}
-    </div>
+    </GridList>
   )
 }

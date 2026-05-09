@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- `features/archive/actions.ts`: インタビュー削除用 `deleteInterview`（ストレージ上の音声・動画削除後に DB 削除）および暗黙知タグ削除用 `deleteTacitTag`（埋め込み行を先に削除してからタグ削除）を追加
+- `features/archive/components/interviews-list.tsx` / `tacit-tags-list.tsx`: 各一覧に削除ボタン（確認ダイアログ付き）を追加。削除成功後は `router.refresh()` でサーバーデータのみ再取得し、Archive のタブ選択を維持したまま一覧を更新する
+
 ### Fixed
 
 - `features/agent/components/agent-chat.tsx`: `cn` のインポートが欠落していたため Vercel ビルドで TypeScript エラーが発生していた。`@/lib/cn` からのインポートを追加。

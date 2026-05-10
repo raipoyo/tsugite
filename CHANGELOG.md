@@ -43,6 +43,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Archive のアップロード画面で、対応形式の表示とフロントエンドのファイル選択・検証を MP3 のみに統一
 - `features/guide/utils/vision.ts`: Vision 画像認識を Google Gemini (`gemini-2.0-flash-exp`) から OpenAI (`gpt-4o`) に置き換え。API を OpenAI に統一し、`@google/generative-ai` への依存を解消
   - `@google/generative-ai` パッケージを `package.json` から削除
   - 既存の `analyzeSceneWithVision` の入出力インターフェースは変更なし（既存の呼び出し元に影響なし）

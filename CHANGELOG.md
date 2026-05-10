@@ -29,6 +29,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `features/guide/actions.ts`: Guideシーン削除用 `deleteReferenceScene` を追加。ログイン中の店ユーザーが所有する `reference_scenes` だけ削除できるようにした
 - `docs/current-requirements.md`: Guide の実装実態に合わせ、OpenAI Vision 利用、`/shop/guide` ルート、正解シーン登録、Guide API 認証の記述を更新
 
+### Removed
+
+- `app/shop/page.tsx`: 店ダッシュボードのクイックアクセスカードから Archive / Guide / Agent の説明文を削除
+
 ### Fixed
 
 - `features/agent/components/agent-chat.tsx`: `cn` のインポートが欠落していたため Vercel ビルドで TypeScript エラーが発生していた。`@/lib/cn` からのインポートを追加。
